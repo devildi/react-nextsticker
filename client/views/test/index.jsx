@@ -6,11 +6,12 @@ import {observer, inject} from 'mobx-react'
 export default class extends React.Component {
 
 	bootstrapper(){
-		return new Promise((resolve, reject) => {	
-				this.props.testMobx.count = 4
-				console.log(this.props.testMobx.count)
-				resolve(true)
-		})
+		return new Promise((resolve) => {
+      setTimeout(() => {
+        this.props.appState.count = 3
+        resolve(true)
+      })
+    })
 	}
 
 	render() {

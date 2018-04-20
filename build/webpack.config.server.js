@@ -1,11 +1,13 @@
 const path = require('path')
 
-module.exports = {
+const isDev = process.env.NODE_ENV === 'development'
+
+const config = {
 	target:'node',
-	mode: 'development',
 	entry: {
 		app: path.join(__dirname, '../client/ssr.js')
 	},
+	externals: Object.keys(require('../package.json').dependencies),
 	output: {
 		filename: 'ssr.js',
 		path: path.join(__dirname, '../dist'),
@@ -29,3 +31,8 @@ module.exports = {
 		]
 	}
 }
+
+if(isDev){
+	config.mode = 'development'
+}
+module.exports = config

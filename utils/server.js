@@ -20,8 +20,20 @@ const getTpl = () => {
 	})
 }
 //创建Module
-const Module = module.constructor
-let serverBundle, createStore
+const NativeModule = require('module')
+const vm = require('vm')
+
+const getModuleFromString = (bundle, filename) => {
+  const m = { exports: {} }
+  const wrapper = NativeModule.wrap(bundle)
+  const script = new vm.Script(wrapper, {
+    filename: filename,
+    displayErrors: true
+  })
+  const result = script.runInThisContext()
+  result.call(m.imports, m.exports, require, m)
+  return m
+}
 
 //通过内存读写
 const fs = new MemoryFileSystem()
@@ -39,8 +51,7 @@ serverCompiler.watch({}, (err, stats) => {
 	const bundlePath = path.join(serverConfig.output.path, serverConfig.output.filename)
 	const bundle = fs.readFileSync(bundlePath, 'utf-8')//从内存读取server bundle
 	//创建Module
-	const m = new Module()
-	m._compile(bundle, 'ssr.js')
+	const m = getModuleFromString(bundle, 'ssr.js')
 	serverBundle = m.exports.default
 	createStore = m.exports.createStore
 })
@@ -56,14 +67,14 @@ module.exports = function (app) {
 			const routerContext = {}
 			const stores = createStore()
 			const app = serverBundle(stores, routerContext, req.url)
-
 			bootstrapper(app).then(() => {
+
 				if(routerContext.url){
 					res.status(302).setHeader('Location', routerContext.url)
 					res.end()
 					return
 				}
-				console.log(stores.testMobx)
+				//console.log(stores.testMobx.count)
 				const content = ReactDomServer.renderToString(app)
 
 				res.send(tpl.replace('<app></app>', content))
