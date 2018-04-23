@@ -32,6 +32,10 @@ const config = {
 	plugins: [
 		new HTMLPlugin({
 			template: path.join(__dirname, '../client/template.html')
+		}),
+		new HTMLPlugin({
+			template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+			filename: 'ssr.ejs'
 		})
 	]
 }

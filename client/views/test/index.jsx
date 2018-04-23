@@ -5,16 +5,17 @@ import {observer, inject} from 'mobx-react'
 
 export default class extends React.Component {
 
-	bootstrapper(){
+	bootstrap(){
 		return new Promise((resolve) => {
       setTimeout(() => {
-        this.props.appState.count = 3
+        this.props.testMobx.count = 3
         resolve(true)
       })
     })
 	}
 
 	render() {
+		
 		return (
 			<div>this is test page, data from store: {this.props.testMobx.count}</div>
 		)

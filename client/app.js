@@ -6,12 +6,14 @@ import { Provider } from 'mobx-react'
 import App from './App.jsx'
 import MobxStore from './store/app-state'
 
+const initialState = window.__INITIAL__STATE__ || {}
+console.log(initialState)
 const root = document.getElementById('root')
 
 const render = Component => {
 	ReactDOM.render(
 		<AppContainer>
-			<Provider testMobx={new MobxStore()}>
+			<Provider testMobx={new MobxStore(initialState.testMobx)}>
 				<BrowserRouter>
 					<Component />
 				</BrowserRouter>

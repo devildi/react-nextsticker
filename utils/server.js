@@ -4,11 +4,13 @@ const MemoryFileSystem = require('memory-fs')
 const path = require('path')
 const ReactDomServer = require('react-dom/server')
 const proxy = require('http-proxy-middleware')
+const ejs = require('ejs')
 const bootstrapper = require('react-async-bootstrapper')
+const serialize = require('serialize-javascript')
 
 const serverConfig = require('../build/webpack.config.server')
 
-const tplURL = 'http://localhost:8888/public/index.html'
+const tplURL = 'http://localhost:8888/public/ssr.ejs'
 
 const getTpl = () => {
 	return new Promise((resolve, reject) => {
@@ -56,6 +58,13 @@ serverCompiler.watch({}, (err, stats) => {
 	createStore = m.exports.createStore
 })
 
+const getStoreState = (stores) => {
+	return Object.keys(stores).reduce((result, storeName) => {
+		result[storeName] = stores[storeName].toJson()
+		return result
+	}, {})
+}
+
 module.exports = function (app) {
 	app.use('/public', proxy({
 		target: 'http://localhost:8888'
@@ -67,6 +76,7 @@ module.exports = function (app) {
 			const routerContext = {}
 			const stores = createStore()
 			const app = serverBundle(stores, routerContext, req.url)
+
 			bootstrapper(app).then(() => {
 
 				if(routerContext.url){
@@ -74,10 +84,15 @@ module.exports = function (app) {
 					res.end()
 					return
 				}
-				//console.log(stores.testMobx.count)
+				const store = getStoreState(stores)
 				const content = ReactDomServer.renderToString(app)
 
-				res.send(tpl.replace('<app></app>', content))
+				const html = ejs.render(tpl, {
+					appString: content,
+					initialState: serialize(store)
+				})
+				res.send(html)
+				//res.send(tpl.replace('<app></app>', content))
 			})
 		})
 	})
