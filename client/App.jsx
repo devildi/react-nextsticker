@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 import Routes from './config/router' 
 
+require('./App.css')
+
 export default class extends React.Component {
 	render() {
 		return [

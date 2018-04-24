@@ -4,7 +4,6 @@ import {observer, inject} from 'mobx-react'
 @inject('testMobx') @observer
 
 export default class extends React.Component {
-
 	bootstrap(){
 		return new Promise((resolve) => {
       setTimeout(() => {
@@ -17,7 +16,7 @@ export default class extends React.Component {
 	render() {
 		
 		return (
-			<div>this is test page, data from store: {this.props.testMobx.count}</div>
+			<div><h1>this is test page</h1>, data from store: {this.props.testMobx.count}</div>
 		)
 	}
 }

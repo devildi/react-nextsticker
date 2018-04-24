@@ -26,6 +26,11 @@ const config = {
 				test: /.js$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/
+			},
+			{
+				test: /\.css$/,
+				include: path.resolve(__dirname, '../client'),
+				loader: 'style-loader!css-loader'
 			}
 		]
 	},
