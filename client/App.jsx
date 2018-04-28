@@ -1,18 +1,27 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import Appbar from './components/appBar'
+import RightDrawer from './components/RightDrawer'
+import Fab from './components/fab'
+
+import MyMapComponent from './components/googlemap'
+
 import Routes from './config/router' 
 
 require('./App.css')
 
 export default class extends React.Component {
 	render() {
-		return [
-			<div key='1'>
-				<Link to='/'>首页</Link><br/>
-				<Link to='/detail'>2级路由</Link>
-			</div>,
-			<Routes key='2'/>
-		]
+		return (
+			<div className='container'>
+				<Appbar />
+				<RightDrawer />
+				<div className='mapContainer'>
+					<MyMapComponent/>
+				</div>
+				<Fab />
+			</div>
+		)
 	}
 }

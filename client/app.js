@@ -2,12 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { AppContainer} from 'react-hot-loader'
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
 import { Provider } from 'mobx-react'
 import App from './App.jsx'
 import MobxStore from './store/app-state'
 
 const initialState = window.__INITIAL__STATE__ || {}
-console.log(initialState)
+//console.log(initialState)
 const root = document.getElementById('root')
 
 const render = Component => {
@@ -15,7 +18,9 @@ const render = Component => {
 		<AppContainer>
 			<Provider testMobx={new MobxStore(initialState.testMobx)}>
 				<BrowserRouter>
-					<Component />
+					<MuiThemeProvider>
+						<Component />
+					</MuiThemeProvider>
 				</BrowserRouter>
 			</Provider>
 		</AppContainer>,

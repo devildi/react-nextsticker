@@ -48,13 +48,16 @@
     "ejs": "^2.5.9",
     "ejs-compiled-loader": "^1.1.0",
     "express": "^4.16.3",
+    "material-ui": "^0.20.0",
     "mobx": "^4.2.0",
     "mobx-react": "^5.0.0",
     "react": "^16.3.1",
     "react-async-bootstrapper": "^2.1.0",
     "react-dom": "^16.3.1",
+    "react-google-maps": "^9.4.5",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "serialize-javascript": "^1.5.0"
+    "serialize-javascript": "^1.5.0",
+    "sweetalert-react": "^0.4.11"
   }
 }
