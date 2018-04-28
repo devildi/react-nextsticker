@@ -9,6 +9,8 @@ const {
   InfoWindow
 } = require("react-google-maps")
 
+const FaAnchor = require("react-icons/lib/fa/anchor")
+
 const MyMapComponent = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAJHnZaO6czTIkkftjQNdtNcjL52pMxsIY&v=3.exp&libraries=geometry,drawing,places",
@@ -31,18 +33,26 @@ const MyMapComponent = compose(
     defaultCenter={props.center}
     center={props.whereAmI}
   >	
-		<Marker position={props.whereAmI} />
+		<Marker 
+			position={props.whereAmI}
+			icon={new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
+                                                      new google.maps.Size(22,22),
+                                                      new google.maps.Point(0,18),
+                                                      new google.maps.Point(11,11))} 
+		/>
     {
     	props.points && props.points.length > 0
     	? props.points.map((row, index) => (
     		<Marker 
-    			defaultAnimation={}
+    			defaultAnimation={google.maps.Animation.DROP}
     			position={row} 
     			key={index}
     			label={(index+1).toString()}
-    			onClick={()=>{console.log('yyy')}}
+    			onClick={props.onToggleOpen}
     		>
-    			
+    			{
+    				props.isOpen && <InfoWindow onCloseClick={props.onToggleOpen}></InfoWindow>
+     			}	
     		</Marker>
     		))
     	: null
