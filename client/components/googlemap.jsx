@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {observer, inject} from 'mobx-react'
 const { compose, withProps, lifecycle, withStateHandlers} = require("recompose")
 const {
@@ -6,10 +7,10 @@ const {
   withGoogleMap,
   GoogleMap,
   Marker,
-  InfoWindow
+  DirectionsRenderer
 } = require("react-google-maps")
 
-const FaAnchor = require("react-icons/lib/fa/anchor")
+import MarkerMe from './Markers'
 
 const MyMapComponent = compose(
   withProps({
@@ -17,13 +18,6 @@ const MyMapComponent = compose(
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />
-  }),
-  withStateHandlers(() => ({
-    isOpen: false,
-  }), {
-    onToggleOpen: ({ isOpen }) => () => ({
-      isOpen: !isOpen,
-    })
   }),
   withScriptjs,
   withGoogleMap
@@ -42,51 +36,41 @@ const MyMapComponent = compose(
 		/>
     {
     	props.points && props.points.length > 0
-    	? props.points.map((row, index) => (
-    		<Marker 
-    			defaultAnimation={google.maps.Animation.DROP}
-    			position={row} 
+    	? props.points.map((row, index) =>  (
+    		<MarkerMe 
+    			position={row.location}
+    			isOpen={row.isOpen}
     			key={index}
-    			label={(index+1).toString()}
-    			onClick={props.onToggleOpen}
-    		>
-    			{
-    				props.isOpen && <InfoWindow onCloseClick={props.onToggleOpen}></InfoWindow>
-     			}	
-    		</Marker>
-    		))
+    			index={(index+1).toString()}
+    			name={row.nameOfScene}
+    			des={row.des}
+    			detail={row.detail}
+    		/>
+    	))
     	: null
     }
+    {props.directions && <DirectionsRenderer directions={props.directions} />}
   </GoogleMap>
 )
-
 
 @inject('testMobx') @observer
 export default class MyComponent extends React.Component {
 
-  locationMyself(){
-  	navigator.geolocation.getCurrentPosition((position) => {
-    	const pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      }
-      this.props.testMobx.location(pos)
-    }, ()=> {console.log('定位失败！')})
-  }
-
   componentDidMount() {
-    this.locationMyself()
+    this.props.testMobx.location()
   }
 
   render() {
-  	let points = this.props.testMobx.toJson().points
-  	let position = this.props.testMobx.toJson().position
-  	console.log(position)
+  	let points = this.props.testMobx.toJson().points1
+  	let position = this.props.testMobx.toCenter().position
+  	let directions = this.props.testMobx.toJson().directions
+  	//console.log(points)
     return (
       <MyMapComponent
       	center={position}
         points={points}
         whereAmI={position}
+        directions={directions}
       />
     )
   }

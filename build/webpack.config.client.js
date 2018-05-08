@@ -64,7 +64,14 @@ if(isDev){
 		publicPath: '/public/',
 		historyApiFallback: {
 			index: '/public/index.html'
-		}
+		},
+		proxy: {
+	    '/api/*': {
+	      target: 'http://localhost:3000',
+	      changeOrigin: true,
+	      secure: false
+	    }
+	  }
 	}
 	config.plugins.push(new webpack.HotModuleReplacementPlugin())
 }

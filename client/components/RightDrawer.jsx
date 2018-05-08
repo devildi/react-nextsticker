@@ -26,15 +26,15 @@ export default class DrawerOpenRightExample extends React.Component {
     this.props.testMobx.changeDrawerState()
   }
 
-  handleClick1(){
-    this.props.testMobx.changeDrawerState()
+  handle(i){
+    this.props.testMobx.openinfoWindowByName(i)
   }
 
   render() {
     let points = this.props.testMobx.toJson().points
     return (
       <div>
-        <Drawer width={200} docked={false} onRequestChange={this.handleClick1.bind(this)} openSecondary={true} open={this.props.testMobx.isOpen} >
+        <Drawer width={200} docked={false} onRequestChange={this.handleClick.bind(this)} openSecondary={true} open={this.props.testMobx.isOpen} >
           <AppBar 
             title="详细路线" 
             iconElementLeft={<IconButton><NavigationClose /></IconButton>}
@@ -44,10 +44,13 @@ export default class DrawerOpenRightExample extends React.Component {
             points && points.length > 0
             ? points.map((row,index) => (
                 <div key={index}>
-                  <div style={style}>DAY {index+1}</div>
+                  <div style={style}>Day {index+1}</div>
                   <Divider />
-                  <MenuItem onClick={this.handleClose}>Menu Item</MenuItem>
-                  <MenuItem onClick={this.handleClose}>Menu Item 2</MenuItem>
+                  {
+                    row.route && row.route.length > 0
+                    ? row.route.map((r,i) => (<MenuItem key={i} onClick={() => {this.handle(r.nameOfScene)}}>{r.nameOfScene}</MenuItem>))
+                    : <div style={style}>无数据</div>
+                  }
                 </div>
               ))
             : <div style={style}>无数据</div>
