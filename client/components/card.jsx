@@ -1,6 +1,7 @@
 import React from 'react'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+import {GridList, GridTile} from 'material-ui/GridList'
 import {observer, inject} from 'mobx-react'
 
 const style = {
@@ -15,6 +16,9 @@ const style = {
  },
  block: {
  	backgroundColor: '#F0F0F0'
+ },
+ grid: {
+ 	width: '100%'
  }
 }
 
@@ -24,7 +28,7 @@ class CardExampleWithAvatar extends React.Component {
 	handle(s, index){
 		const DirectionsService = new google.maps.DirectionsService()
 		DirectionsService.route({
-      origin: this.props.testMobx.toCenter().position,
+      origin: this.props.testMobx.toJson().position,
       destination: this.props.position,
       travelMode: s
     }, (result, status) => {
@@ -43,9 +47,15 @@ class CardExampleWithAvatar extends React.Component {
 					title={this.props.nameOfScene}
 					subtitle={this.props.nameOfScene}
 				/>
-				<CardMedia>
-					<img style={style.pic} src="https://res.cloudinary.com/dnfhsjz8u/image/upload/v1500442001/sample.jpg" alt="" />
-				</CardMedia>
+					<GridList
+			      cols={1}
+			      cellHeight={200}
+			      padding={0}
+			    >
+		        <GridTile>
+		          <img src={this.props.pic}/>
+		        </GridTile>
+			    </GridList>
 				<CardText>
 					{this.props.des}
 				</CardText>

@@ -2,13 +2,13 @@ html,body{
 	padding: 0;
 	margin: 0;
 }
+::-webkit-scrollbar{
+  display:none;
+}
 .FAB{
 	position: fixed;
 	bottom: 50;
 	left: 50;
-}
-.container{
-	
 }
 .mapContainer{
 	background-color: grey;
@@ -17,4 +17,42 @@ html,body{
   bottom: 0;
   right:0;
   left:0;
+}
+.division {
+	padding: 10px;
+}
+.block{
+	padding: 5px;
+	border: 1px solid #f0f0f0;
+	margin-bottom: 5px;
+}
+.btn{
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+}
+.cardStyle{
+	border: 1px solid #f0f0f0;
+}
+.title{
+	padding-top: 5px;
+	text-align: center;
+}
+.day{
+	background-color: #f0f0f0;
+}
+.index{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 50px;
+	height: 50px;
+	background-color: #7AC5CD;
+	font-size: 35px;
+	color: #fff;
+	line-height: 50px;
+	text-align: center;
+}
+.block1{
+	position: relative;
 }

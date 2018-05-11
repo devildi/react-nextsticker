@@ -2,16 +2,16 @@ import React from 'react'
 import {observer, inject} from 'mobx-react'
 
 import FloatingActionButton from 'material-ui/FloatingActionButton'
-import ContentAdd from 'material-ui/svg-icons/content/add'
+import ContentAdd from 'material-ui/svg-icons/maps/my-location'
 import Snackbar from 'material-ui/Snackbar'
 
 const style = {
 	fab: {
-  position: 'fixed',
-	bottom: 40,
-	left: 40,
-	zIndex: 100
-},
+	  position: 'fixed',
+		bottom: 40,
+		left: 40,
+		zIndex: 100
+	},
 	snackbar: {
 		textAlign: 'center',
 		height: 40,

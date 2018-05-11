@@ -41,6 +41,7 @@ export default class extends React.Component {
   							position={this.props.position}
   							index={this.props.index}
   							detail={this.props.detail}
+                pic={this.props.pic}
   						/> 
   					</div>
   				</InfoWindow>

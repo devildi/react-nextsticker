@@ -105,12 +105,7 @@ export default class TestMobx {
     return {
       points: toJS(this.points),
       points1: toJS(this.points1),
-      directions: toJS(this.directions)
-    }
-  }
-
-  toCenter() {
-    return {
+      directions: toJS(this.directions),
       position: toJS(this.position)
     }
   }

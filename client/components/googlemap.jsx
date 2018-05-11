@@ -45,6 +45,7 @@ const MyMapComponent = compose(
     			name={row.nameOfScene}
     			des={row.des}
     			detail={row.detail}
+          pic={row.pic}
     		/>
     	))
     	: null
@@ -62,7 +63,7 @@ export default class MyComponent extends React.Component {
 
   render() {
   	let points = this.props.testMobx.toJson().points1
-  	let position = this.props.testMobx.toCenter().position
+  	let position = this.props.testMobx.toJson().position
   	let directions = this.props.testMobx.toJson().directions
   	//console.log(points)
     return (
