@@ -92,7 +92,6 @@ module.exports = function (app) {
 					initialState: serialize(store)
 				})
 				res.send(html)
-				//res.send(tpl.replace('<app></app>', content))
 			})
 		})
 	})

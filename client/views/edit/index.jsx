@@ -24,6 +24,8 @@ class App extends React.Component {
     super(props);
     this.state = {
     	name : '',
+    	tripName : '',
+    	author : '',
     	indexOfDay: '',
     	date: null,
     	nameOfScene: '',
@@ -67,7 +69,7 @@ class App extends React.Component {
   }
 
   _submit(){
-  	if(!this.state.name || !this.state.indexOfDay || !this.state.date){
+  	if(!this.state.author ||!this.state.tripName ||!this.state.name || !this.state.indexOfDay || !this.state.date){
 			return alert('有空未填！')
 		}
 		if(!this.state.cache.length){
@@ -76,6 +78,8 @@ class App extends React.Component {
 
   	axios.post(url, {
 			name: this.state.name,
+			tripName: this.state.tripName,
+			author: this.state.author,
 			indexOfDay: this.state.indexOfDay,
 			date: this.state.date,
 			cache: cache1
@@ -103,6 +107,8 @@ class App extends React.Component {
 			  />
       	<div className='division'>
 	      	<TextField floatingLabelText="行程编号" floatingLabelFixed={true} value={this.state.name} onChange={(e) => {this.setState({name: e.target.value})}}/><br />
+	      	<TextField floatingLabelText="行程名字" floatingLabelFixed={true} value={this.state.tripName} onChange={(e) => {this.setState({tripName: e.target.value})}}/><br />
+	      	<TextField floatingLabelText="行程设计人" floatingLabelFixed={true} value={this.state.author} onChange={(e) => {this.setState({author: e.target.value})}}/><br />
 	      	<TextField floatingLabelText="行程第几天" floatingLabelFixed={true} value={this.state.indexOfDay} onChange={(e) => {this.setState({indexOfDay: e.target.value})}}/><br />
 	      	<DatePicker value={this.state.date} onChange={(event, date) => {console.log(date);this.setState({date: date})}} hintText="具体日期" />
 	      	{
@@ -125,7 +131,7 @@ class App extends React.Component {
 	      	<div className='block'>
 	      		<div>
 	      			<TextField floatingLabelText="景点名称" floatingLabelFixed={true} style={{marginRight:'20px'}}value={this.state.nameOfScene} onChange={(e) => {this.setState({nameOfScene: e.target.value})}}/>
-	      			<TextField floatingLabelText="坐标" floatingLabelFixed={true}style={{marginRight:'20px'}}value={this.state.location} onChange={(e) => {this.setState({location: e.target.value})}}/>
+	      			<TextField floatingLabelText="坐标" floatingLabelFixed={true}hintText='{"lat": "4", "lng": "1"}'style={{marginRight:'20px'}}value={this.state.location} onChange={(e) => {this.setState({location: e.target.value})}}/>
 	      			<TextField floatingLabelText="是否是点" hintText="0/1" style={{marginRight:'20px'}}floatingLabelFixed={true}value={this.state.pointOrNot} onChange={(e) => {this.setState({pointOrNot: e.target.value})}}/>
 	      			<TextField floatingLabelText="类别" hintText="0/1/2/3(景/吃/住/行)" floatingLabelFixed={true}value={this.state.category} onChange={(e) => {this.setState({category: e.target.value})}}/>
 	      			<TextField floatingLabelText="图片地址" floatingLabelFixed={true}value={this.state.pic} onChange={(e) => {this.setState({pic: e.target.value})}}/><br />
@@ -162,7 +168,7 @@ class App2 extends React.Component {
 	    }
   	})
   	.then(function (response) {
-  		//console.log(response.data)
+  		console.log(response.data)
 			if(response.data.data.length > 0){
 				that.setState({cache: response.data.data})
 			} else{
@@ -230,6 +236,8 @@ class App2 extends React.Component {
 				    onRightIconButtonClick={this._save.bind(this)}
 				  />
 				  <div className='title'>行程编号:{cache[0].user}</div>
+				  <div className='title'>行程名字:{cache[0].tripName}</div>
+				  <div className='title'>设计:{cache[0].author}</div>
 				  {
 				  	cache.map((row, index) => (
 				  		<div className='division' key={index}>

@@ -12,7 +12,8 @@ const styles = {
   },
   gridList: {
     width: '100%',
-    height: 450
+    height: 180,
+    backgroundColor: 'grey'
   },
   fab: {
     position: 'fixed',
@@ -22,18 +23,14 @@ const styles = {
   }
 }
 
-const tilesData = [
-  {
-    img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525840316305&di=c07beda105f1dc66966497f117b0dec1&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dpixel_huitu%252C0%252C0%252C294%252C40%2Fsign%3D51d3556b8e35e5dd8421ad9f1fbec283%2Fb2de9c82d158ccbf7290000312d8bc3eb13541de.jpg',
-    title: '青岛浮生3日',
-    author: 'DevilDI',
-  }
-]
-
 @inject('testMobx') @observer
 export default class extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
+  }
+
+  componentDidMount(){
+    this.props.testMobx.getAll(this.props.testMobx.user)
   }
 
 	bootstrap(){
@@ -45,12 +42,19 @@ export default class extends React.Component {
     })
 	}
 
-  change(){
-    this.context.router.history.push('detail')
+  change(i){
+    if(i){
+      this.context.router.history.push({
+      pathname: '/detail/'+ i
+    })
+    } else {
+      this.context.router.history.goBack()
+    }
   }
 
 	render() {
-		console.log(this.props.testMobx.count)
+    let data = this.props.testMobx.toJson().points
+    let all = this.props.testMobx.toJson().all
 		return (
 			<div style={styles.root}>
 		    <GridList
@@ -59,18 +63,27 @@ export default class extends React.Component {
 		      style={styles.gridList}
 		      padding={0}
 		    >
-		      {tilesData.map((tile, i) => (
-		        <GridTile
-		          key={i}
-		          title={tile.title}
-		          subtitle={<span>by <b>{tile.author}</b></span>}
-		          onClick={() => this.change(i)}
-		        >
-		          <img src={tile.img} />
-		        </GridTile>
-		      ))}
+	        <GridTile
+	          title={data[0].tripName}
+	          subtitle={<span>by <b>{data[0].author}</b></span>}
+	          onClick={() => this.change(this.props.testMobx.user)}
+	        >
+	          <img src={data[0].route[0].pic} />
+	        </GridTile>
+          {
+            all.map((r,i) => (
+              <GridTile
+                key={i}
+                title={r.tripName}
+                subtitle={<span>by <b>{r.author}</b></span>}
+                onClick={() => this.change(r.user)}
+              >
+                <img src={r.route[0].pic} />
+              </GridTile>
+            ))
+          }
 		    </GridList>
-        <FloatingActionButton style={styles.fab} onClick={this.change.bind(this)}>
+        <FloatingActionButton style={styles.fab} onClick={() => this.change()}>
           <ContentAdd />
         </FloatingActionButton>
 		  </div>

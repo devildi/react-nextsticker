@@ -8,9 +8,7 @@ import PropTypes from 'prop-types'
 import {
   deepOrange300,
   purple500,
-} from 'material-ui/styles/colors'
-
-import data from '../../../utils/data' 
+} from 'material-ui/styles/colors' 
 
 import {observer, inject} from 'mobx-react'
 
@@ -48,10 +46,11 @@ const tilesData =
 
 class Container extends React.Component {
 	render(){
+		let data = this.props.data
 		return (
 			<div>
 			{
-				data && data.length
+				data && data.length > 0
 				? data.map((r, i) => (
 						<Paper zDepth={3} style={style.paper} key={i}>
 							<div style={style.con}>
@@ -62,12 +61,14 @@ class Container extends React.Component {
 			       		</div>
 			       		<div>
 			       		{
-			       			r.map((row, index) => (
-			       				<div key={index}>
-											<h3>{row.name}</h3>
-											<div style={style.border}>{row.des}</div>
-										</div>
-			       			))
+			       			r.route && r.route.length > 0
+			       			?	r.route.map((row, index) => (
+				       				<div key={index}>
+												<h3>{row.nameOfScene}</h3>
+												<div style={style.border}>{row.des}</div>
+											</div>
+				       			))
+			       			: null
 			       		}
 			       		</div>
 							</div>
@@ -85,10 +86,25 @@ export default class extends React.Component {
 	static contextTypes = {
     router: PropTypes.object,
   }
+
+  componentDidMount(){
+  	if(this.props.match.params.id !== this.props.testMobx.user){
+  		this.props.testMobx.getPersonalData(this.props.match.params.id)
+  	}
+  }
+
 	change(){
-		this.context.router.history.push('map')
+		this.context.router.history.goBack()
 	}
+
 	render() {
+		let data = this.props.testMobx.toJson().points
+		let data1 = this.props.testMobx.toJson().pointsP
+		let picURL = null
+		if(data1 && data1.length > 0){
+			picURL = data1[0].route[0].pic
+		}
+		//let picURL = data1 && data1[0].route[0].pic
 		return (
 			<div>
 				<GridList
@@ -97,10 +113,12 @@ export default class extends React.Component {
 		      padding={0}
 		    >
 	        <GridTile>
-	          <img src={tilesData.img} />
+	          <img src={this.props.match.params.id === this.props.testMobx.user ? data[0].route[0].pic : picURL} />
 	        </GridTile>
 		    </GridList>
-		    <Container />
+		    <Container 
+		    	data={ this.props.match.params.id !== this.props.testMobx.user ? data1 : data}
+		    />
 		    <FloatingActionButton style={style.fab} onClick={this.change.bind(this)}>
 		      <ContentAdd />
 		    </FloatingActionButton>

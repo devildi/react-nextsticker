@@ -4,20 +4,25 @@ import axios from 'axios'
 import data from '../../utils/data'
 
 export default class TestMobx {
-	constructor({isOpen, position, points, points1, directions} = {isOpen: false, position: {lat: 39.908892, lng: 116.404165}, points: [{position:{ lat: 41.868998, lng: 123.5270885999999 }, isOpen: false},{position: { lat: 41.6689984, lng: 123.42708859999998 }, isOpen: false}],points1: [], directions: null}) {
+	constructor({isOpen, position, points, pointsP,points1, directions, all} = {isOpen: false, position: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], directions: null, all: []}) {
 		this.isOpen = isOpen
 	  this.position = position
 	  this.points = points
+	  this.pointsP = pointsP
 	  this.points = points1
 	  this.directions = directions
 	  this.flag = null
+	  this.user = ''
+	  this.all = all
 	}
 
 	@observable isOpen
 	@observable position
 	@observable points
+	@observable pointsP
 	@observable points1
 	@observable directions
+	@observable all
 
 	@computed get msg() {
 		return `${this.name} say count is ${this.name}`
@@ -26,6 +31,7 @@ export default class TestMobx {
 	@action changeDrawerState() {
 		this.isOpen = !this.isOpen
 	}
+
 	@action location() {
   	navigator.geolocation.getCurrentPosition((position) => {
     	const pos = {
@@ -36,12 +42,59 @@ export default class TestMobx {
     }, () => {alert('定位失败！')})		
 	}
 
-	@action fecthdata(){
-		axios.get('/api/admin/get')
+	@action initData(){
+		let data = JSON.parse(window.localStorage.getItem("dataNextsticker"))
+		let user = window.localStorage.getItem("userNextsticker")
+		if(data){
+			this.points = data.points
+			this.points1 = data.points1
+			this.user = user
+		} else {
+			this.points = []
+			this.points1 = []
+		}
+	}
+
+	@action fatchData(i){
+		return new Promise((resolve, reject) => {
+			axios.get('/api/admin/get',{
+				params: {
+		      name: i
+		    }
+			})
 			.then((data) => {
 				this.points = data.data.data
 				this.points1 = data.data.data1
+				this.user = i
+				this.save()
+				resolve(data.data.data)
 			})
+		})
+	}
+
+	@action getAll(name){
+		axios.get('/api/admin/all',{
+			params: {
+				name: name
+			}
+		})
+		.then((data) => {
+			this.all = data.data.data
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+	}
+
+	@action getPersonalData(i){
+		axios.get('/api/admin/get',{
+			params: {
+	      name: i
+	    }
+		})
+		.then((data) => {
+			this.pointsP = data.data.data
+		})
 	}
 
 	@action openinfoWindow(j){
@@ -73,7 +126,6 @@ export default class TestMobx {
 		let i = 0
 		for (i; i < array.length; i++){
 			if (array[i].nameOfScene === name){
-
 				if(this.flag === i) {
 					array[i].isOpen = !array[i].isOpen
 					this.points1 = array
@@ -104,9 +156,18 @@ export default class TestMobx {
 	toJson() {
     return {
       points: toJS(this.points),
+      pointsP: toJS(this.pointsP),
       points1: toJS(this.points1),
       directions: toJS(this.directions),
-      position: toJS(this.position)
+      position: toJS(this.position),
+      all: toJS(this.all)
     }
+  }
+
+  save() {
+  	let data = this.toJson()
+  	let user = this.user
+  	window.localStorage.setItem('dataNextsticker', JSON.stringify(data))
+  	window.localStorage.setItem('userNextsticker', user)
   }
 }

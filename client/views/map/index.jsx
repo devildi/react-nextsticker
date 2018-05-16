@@ -11,15 +11,21 @@ require('../../App.css')
 
 @inject('testMobx') @observer
 export default class extends React.Component {
-
+	constructor(props) {
+	  super(props)
+	
+	  this.state = {
+	  	data: null
+	  }
+	}
 	componentDidMount(){
-		this.props.testMobx.fecthdata()
+		this.props.testMobx.initData()
 	}
 
 	render() {
 		return (
 			<div className='container'>
-				<Appbar />
+				<Appbar/>
 				<RightDrawer />
 				<div className='mapContainer'>
 					<MyMapComponent/>

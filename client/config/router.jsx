@@ -11,5 +11,5 @@ export default () => [
 	<Route path='/map' component = {MapG} exact key='map'/>,
 	<Route path='/more' component = {More} exact key='more'/>,
 	<Route path='/edit' component = {Edit} exact key='edit'/>,
-	<Route path='/detail' component = {Detail} key='detail'/>
+	<Route path='/detail/:id' component = {Detail} key='detail'/>
 ]
