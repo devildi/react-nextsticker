@@ -100,7 +100,7 @@ class App extends React.Component {
     return (
       <div>
 	      <AppBar
-			    title={<span style={{}}>我的行程</span>}
+			    title={<span>我的行程</span>}
 			    iconElementRight={<FlatButton label="完成" />}
 			    iconElementLeft={ <Link to='/a/1'><IconButton iconStyle={{color: 'white'}}><MoreVertIcon /></IconButton></Link>}
 			    onRightIconButtonClick={this._submit.bind(this)}

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {GridList, GridTile} from 'material-ui/GridList'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/navigation/arrow-back'
-
+import Helmet from 'react-helmet'
 const styles = {
   root: {
     display: 'flex',
@@ -17,8 +17,8 @@ const styles = {
   },
   fab: {
     position: 'fixed',
-    bottom: 40,
-    right: 40,
+    bottom: 20,
+    right: 20,
     zIndex: 100
   }
 }
@@ -57,6 +57,10 @@ export default class extends React.Component {
     let all = this.props.testMobx.toJson().all
 		return (
 			<div style={styles.root}>
+        <Helmet>
+          <title>Fancy your trip!</title>
+          <meta name="google trip" content="Fancy Your Trip!"/>
+        </Helmet>
 		    <GridList
 		      cols={1}
 		      cellHeight={180}

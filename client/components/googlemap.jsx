@@ -65,7 +65,6 @@ export default class MyComponent extends React.Component {
   	let points = this.props.testMobx.toJson().points1
   	let position = this.props.testMobx.toJson().position
   	let directions = this.props.testMobx.toJson().directions
-  	//console.log(points)
     return (
       <MyMapComponent
       	center={position}

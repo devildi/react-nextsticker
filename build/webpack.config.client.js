@@ -74,6 +74,37 @@ if(isDev){
 	  }
 	}
 	config.plugins.push(new webpack.HotModuleReplacementPlugin())
+} else {
+	config.entry = {
+		app: path.join(__dirname, '../client/app.js'),
+		vendor: [
+		'react', 
+		'react-dom', 
+		'react-router-dom', 
+		'mobx', 
+		'mobx-react',
+		'axios'
+		]
+	}
+	config.output.filename = '[name][chunkhash].js'
+	config.plugins.push(
+		new webpack.optimize.RuntimeChunkPlugin({
+	    name: 'vendor'
+	  }),
+	  new webpack.optimize.RuntimeChunkPlugin({
+	    name: 'manifast'
+	  }),
+	  new webpack.NamedModulesPlugin(),//为异步加载的模块命名
+	  new webpack.DefinePlugin({
+	    'process.env': JSON.stringify('production')
+	  }),
+	  new webpack.NamedChunksPlugin((chunk) => {
+	    if(chunk.name){
+	      return chunk.name
+	    }
+	    return chunk.mapModules(m => path.relative(m.context, m.request)).join('_')
+	  })
+	)
 }
 
 module.exports = config

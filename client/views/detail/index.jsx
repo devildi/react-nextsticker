@@ -5,6 +5,7 @@ import Avatar from 'material-ui/Avatar'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/navigation/arrow-back'
 import PropTypes from 'prop-types'
+import Helmet from 'react-helmet'
 import {
   deepOrange300,
   purple500,
@@ -31,19 +32,11 @@ const style = {
   },
   fab: {
 	  position: 'fixed',
-		bottom: 40,
-		right: 40,
+		bottom: 20,
+		right: 20,
 		zIndex: 100
 	}
 }
-
-const tilesData = 
-  {
-    img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525840316305&di=c07beda105f1dc66966497f117b0dec1&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dpixel_huitu%252C0%252C0%252C294%252C40%2Fsign%3D51d3556b8e35e5dd8421ad9f1fbec283%2Fb2de9c82d158ccbf7290000312d8bc3eb13541de.jpg',
-    title: '青岛浮生3日',
-    author: 'DevilDI'
-  }
-
 class Container extends React.Component {
 	render(){
 		let data = this.props.data
@@ -88,6 +81,8 @@ export default class extends React.Component {
   }
 
   componentDidMount(){
+  	console.log(this.props)
+  	console.log(this.props.match.params.id)
   	if(this.props.match.params.id !== this.props.testMobx.user){
   		this.props.testMobx.getPersonalData(this.props.match.params.id)
   	}
@@ -104,9 +99,12 @@ export default class extends React.Component {
 		if(data1 && data1.length > 0){
 			picURL = data1[0].route[0].pic
 		}
-		//let picURL = data1 && data1[0].route[0].pic
 		return (
 			<div>
+				<Helmet>
+					<title>Fancy your trip!</title>
+					<meta name="google trip" content="Fancy Your Trip!"/>
+				</Helmet>
 				<GridList
 		      cols={1}
 		      cellHeight={300}

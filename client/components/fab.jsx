@@ -8,57 +8,35 @@ import Snackbar from 'material-ui/Snackbar'
 const style = {
 	fab: {
 	  position: 'fixed',
-		bottom: 40,
-		left: 40,
+		bottom: 20,
+		left: 20,
 		zIndex: 100
 	},
 	snackbar: {
-		textAlign: 'center',
-		height: 40,
-		lineHeight: 40
+		textAlign: 'center'
 	}
 }
 
 @inject('testMobx') @observer
 export default class FloatingActionButtonExampleSimple extends React.Component {
-	constructor(props) {
-	  super(props)
-	
-	  this.state = {
-	  	open: false
-	  }
-	}
-
-	handleClick = () => {
-    this.setState({
-      open: true,
-    })
-  }
-
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    })
-  }
-
 	click(){
-		this.props.testMobx.location()
-		this.setState({
-      open: true,
-    })
+		this.props.testMobx.location('s')
 	}	
 
 	render(){
 		return (
 			<div>
-				<FloatingActionButton style={style.fab} onClick={this.click.bind(this)}>
+				<FloatingActionButton 
+					style={style.fab} 
+					onClick={this.click.bind(this)}
+					disabled={this.props.testMobx.isLocating}
+				>
 				  <ContentAdd />
 				</FloatingActionButton>
 				<Snackbar
 					style={style.snackbar}
-          open={this.state.open}
+          open={this.props.testMobx.isLocating}
           message="定位中，请稍后！"
-          autoHideDuration={4000}
           onRequestClose={this.handleRequestClose}
         />
 			</div>

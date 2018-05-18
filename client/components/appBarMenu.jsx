@@ -22,11 +22,13 @@ class IconMenuExampleSimple extends React.Component {
   }
 
   changePage(i){
+    console.log('afterPush', i)
     this.context.router.history.push(`/${i}`)
   }
 
   render(){
     let user = this.props.testMobx.user
+    console.log('fromappmenu',user)
     return(
       <div>
         <IconMenu
@@ -37,6 +39,11 @@ class IconMenuExampleSimple extends React.Component {
         >
           <MenuItem primaryText="路线详情" onClick={() => this.changePage('detail/' + user)}/>
           <MenuItem primaryText="更多线路" onClick={() => this.changePage('more')}/>
+          {
+            user && user === 'wudi'
+            ?<MenuItem primaryText="设计" onClick={() => this.changePage('edit')}/>
+            :null
+          }
           <Divider />
           <MenuItem primaryText="退出" onClick={this._delete.bind(this)}/>
         </IconMenu>

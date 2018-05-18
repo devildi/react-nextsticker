@@ -12,6 +12,7 @@ export default class TestMobx {
 	  this.points = points1
 	  this.directions = directions
 	  this.flag = null
+	  this.isLocating = false
 	  this.user = ''
 	  this.all = all
 	}
@@ -23,6 +24,7 @@ export default class TestMobx {
 	@observable points1
 	@observable directions
 	@observable all
+	@observable isLocating
 
 	@computed get msg() {
 		return `${this.name} say count is ${this.name}`
@@ -32,14 +34,23 @@ export default class TestMobx {
 		this.isOpen = !this.isOpen
 	}
 
-	@action location() {
+	@action location(i) {
+		if(i){
+			this.isLocating = true
+		}
   	navigator.geolocation.getCurrentPosition((position) => {
     	const pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       }
       this.position = pos
-    }, () => {alert('定位失败！')})		
+      this.isLocating = false
+    }, () => {
+    	alert('定位失败！')
+    	if(this.isLocating){
+    		this.isLocating = false
+    	}
+    })		
 	}
 
 	@action initData(){
@@ -48,6 +59,7 @@ export default class TestMobx {
 		if(data){
 			this.points = data.points
 			this.points1 = data.points1
+			this.position = data.position
 			this.user = user
 		} else {
 			this.points = []

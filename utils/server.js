@@ -7,7 +7,7 @@ const proxy = require('http-proxy-middleware')
 const ejs = require('ejs')
 const bootstrapper = require('react-async-bootstrapper')
 const serialize = require('serialize-javascript')
-
+const Helmet = require('react-helmet').default
 const serverConfig = require('../build/webpack.config.server')
 
 const tplURL = 'http://localhost:8888/public/ssr.ejs'
@@ -84,12 +84,19 @@ module.exports = function (app) {
 					res.end()
 					return
 				}
+				//拿到title、meta等标签
+				const helmet = Helmet.rewind()
 				const store = getStoreState(stores)
 				const content = ReactDomServer.renderToString(app)
 
 				const html = ejs.render(tpl, {
 					appString: content,
-					initialState: serialize(store)
+					initialState: serialize(store),
+					//渲染title等标签
+					meta: helmet.meta.toString(),
+	        title: helmet.title.toString(),
+	        style: helmet.style.toString(),
+	        link: helmet.link.toString()
 				})
 				res.send(html)
 			})
