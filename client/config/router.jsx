@@ -29,7 +29,7 @@ RouteController.defaultProps = {
 }
 
 export default () => [
-	<Route path='/' render={() => <Redirect to="/edit" />} exact key='index'/>,
+	<Route path='/' render={() => <Redirect to="/map" />} exact key='index'/>,
 	<Route path='/map' component = {MapG} exact key='map'/>,
 	<Route path='/edit' component = {Edit} exact key='edit'/>,
 	<InjectedRoute path='/more' component = {More} exact key='more'/>,
