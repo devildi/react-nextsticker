@@ -95,6 +95,27 @@ class App extends React.Component {
 	  })
   }
 
+  // upload(){
+  // 	axios.get('/api/admin/upload', {
+  // 		params: {
+	 //      picURL: this.state.pic
+	 //    }
+  // 	})
+  // 	.then(function (response) {
+  // 		console.log(response.data)
+		// 	if(response.data.data){
+		// 		this.setState({
+		// 			pic: response.data.data
+		// 		})
+		// 	} else{
+		// 		alert('上传图片失败，请重试！')
+		// 	}
+	 //  })
+	 //  .catch(function (error) {
+	 //    console.log(error)
+	 //  })
+  // }
+
   render() {
   	let cache = this.state.cache
     return (
@@ -106,11 +127,35 @@ class App extends React.Component {
 			    onRightIconButtonClick={this._submit.bind(this)}
 			  />
       	<div className='division'>
-	      	<TextField floatingLabelText="行程编号" floatingLabelFixed={true} value={this.state.name} onChange={(e) => {this.setState({name: e.target.value})}}/><br />
-	      	<TextField floatingLabelText="行程名字" floatingLabelFixed={true} value={this.state.tripName} onChange={(e) => {this.setState({tripName: e.target.value})}}/><br />
-	      	<TextField floatingLabelText="行程设计人" floatingLabelFixed={true} value={this.state.author} onChange={(e) => {this.setState({author: e.target.value})}}/><br />
-	      	<TextField floatingLabelText="行程第几天" floatingLabelFixed={true} value={this.state.indexOfDay} onChange={(e) => {this.setState({indexOfDay: e.target.value})}}/><br />
-	      	<DatePicker value={this.state.date} onChange={(event, date) => {console.log(date);this.setState({date: date})}} hintText="具体日期" />
+	      	<TextField 
+		      	floatingLabelText="行程编号" 
+		      	floatingLabelFixed={true} 
+		      	value={this.state.name} 
+		      	onChange={(e) => {this.setState({name: e.target.value})}}
+	      	/><br />
+	      	<TextField 
+		      	floatingLabelText="行程名字" 
+		      	floatingLabelFixed={true} 
+		      	value={this.state.tripName} 
+		      	onChange={(e) => {this.setState({tripName: e.target.value})}}
+	      	/><br />
+	      	<TextField 
+		      	floatingLabelText="行程设计人" 
+		      	floatingLabelFixed={true} 
+		      	value={this.state.author} 
+		      	onChange={(e) => {this.setState({author: e.target.value})}}
+	      	/><br />
+	      	<TextField 
+		      	floatingLabelText="行程第几天" 
+		      	floatingLabelFixed={true} 
+		      	value={this.state.indexOfDay} 
+		      	onChange={(e) => {this.setState({indexOfDay: e.target.value})}}
+	      	/><br />
+	      	<DatePicker 
+		      	value={this.state.date} 
+		      	onChange={(event, date) => {console.log(date);this.setState({date: date})}} 
+		      	hintText="具体日期" 
+	      	/>
 	      	{
 	      		cache&&cache.length > 0
 	      		?	cache.map((i,c) => (
@@ -130,12 +175,53 @@ class App extends React.Component {
 	      	}
 	      	<div className='block'>
 	      		<div>
-	      			<TextField floatingLabelText="景点名称" floatingLabelFixed={true} style={{marginRight:'20px'}}value={this.state.nameOfScene} onChange={(e) => {this.setState({nameOfScene: e.target.value})}}/>
-	      			<TextField floatingLabelText="坐标" floatingLabelFixed={true}hintText='{"lat": "4", "lng": "1"}'style={{marginRight:'20px'}}value={this.state.location} onChange={(e) => {this.setState({location: e.target.value})}}/>
-	      			<TextField floatingLabelText="是否是点" hintText="0/1" style={{marginRight:'20px'}}floatingLabelFixed={true}value={this.state.pointOrNot} onChange={(e) => {this.setState({pointOrNot: e.target.value})}}/>
-	      			<TextField floatingLabelText="类别" hintText="0/1/2/3(景/吃/住/行)" floatingLabelFixed={true}value={this.state.category} onChange={(e) => {this.setState({category: e.target.value})}}/>
-	      			<TextField floatingLabelText="图片地址" floatingLabelFixed={true}value={this.state.pic} onChange={(e) => {this.setState({pic: e.target.value})}}/><br />
-	      			<TextField multiLine={true}rows={2}rowsMax={4}floatingLabelText="描述" floatingLabelFixed={true}value={this.state.des} onChange={(e) => {this.setState({des: e.target.value})}}/>
+	      			<TextField 
+		      			floatingLabelText="景点名称" 
+		      			floatingLabelFixed={true} 
+		      			style={{marginRight:'20px'}}
+		      			value={this.state.nameOfScene} 
+		      			onChange={(e) => {this.setState({nameOfScene: e.target.value})}}
+	      			/>
+	      			<TextField 
+		      			floatingLabelText="坐标" 
+		      			floatingLabelFixed={true}
+		      			hintText='{"lat": "4", "lng": "1"}'
+		      			style={{marginRight:'20px'}}
+		      			value={this.state.location} onChange={(e) => {this.setState({location: e.target.value})}}
+	      			/>
+	      			<TextField 
+		      			floatingLabelText="是否是点" 
+		      			hintText="0/1" 
+		      			style={{marginRight:'20px'}}
+		      			floatingLabelFixed={true}
+		      			value={this.state.pointOrNot} onChange={(e) => {this.setState({pointOrNot: e.target.value})}}
+	      			/>
+	      			<TextField 
+		      			floatingLabelText="类别" 
+		      			hintText="0/1/2/3(景/吃/住/行)" 
+		      			floatingLabelFixed={true}
+		      			value={this.state.category} 
+		      			onChange={(e) => {this.setState({category: e.target.value})}}
+	      			/>
+	      			<TextField 
+		      			floatingLabelText="图片地址" 
+		      			multiLine={true}
+		      			rows={2}
+		      			rowsMax={4}
+		      			floatingLabelFixed={true}
+		      			value={this.state.pic} 
+		      			onChange={(e) => {this.setState({pic: e.target.value})}}
+	      			/>
+	      			<br />
+	      			<TextField 
+		      			multiLine={true}
+		      			rows={2}
+		      			rowsMax={4}
+		      			floatingLabelText="描述" 
+		      			floatingLabelFixed={true}
+		      			value={this.state.des} 
+		      			onChange={(e) => {this.setState({des: e.target.value})}}
+	      			/>
 	      		</div>
 	      		<RaisedButton label="添加" primary={true} onClick={this._add.bind(this)}/>
 	      	</div>      	
@@ -168,7 +254,7 @@ class App2 extends React.Component {
 	    }
   	})
   	.then(function (response) {
-  		console.log(response.data)
+  		//console.log(response.data)
 			if(response.data.data.length > 0){
 				that.setState({cache: response.data.data})
 			} else{
@@ -225,8 +311,16 @@ class App2 extends React.Component {
           onRequestClose={this.handleClose}
         >
           <div>请填写下列信息：</div>
-          <TextField hintText='行程编号' value={this.state.name} onChange={(e) => {this.setState({name: e.target.value})}}/><br />
-	      	<TextField hintText='行程第几天' value={this.state.indexOfDay} onChange={(e) => {this.setState({indexOfDay: e.target.value})}}/><br />
+          <TextField 
+	          hintText='行程编号' 
+	          value={this.state.name} 
+	          onChange={(e) => {this.setState({name: e.target.value})}}
+          /><br />
+	      	<TextField 
+		      	hintText='行程第几天' 
+		      	value={this.state.indexOfDay} 
+		      	onChange={(e) => {this.setState({indexOfDay: e.target.value})}}
+	      	/><br />
         </Dialog>
 	  		:<div>
 	  			<AppBar
@@ -243,7 +337,12 @@ class App2 extends React.Component {
 				  		<div className='division' key={index}>
 						 
 				      	<div className='day'>
-				      		<TextField floatingLabelText="行程第几天" floatingLabelFixed={true} value={cache[index].indexOfDay} onChange={(e) => {this.setState({indexOfDay: e.target.value})}}/>
+				      		<TextField 
+					      		floatingLabelText="行程第几天" 
+					      		floatingLabelFixed={true} 
+					      		value={cache[index].indexOfDay} 
+					      		onChange={(e) => {this.setState({indexOfDay: e.target.value})}}
+				      		/>
 				      	</div>
 				      	<DatePicker value={new Date(cache[index].date)} onChange={(event, date) => {console.log(date);cache[index].date = date;this.setState({cache: cache});console.log(cache)}} hintText="具体日期" />
 				      	{
@@ -252,12 +351,54 @@ class App2 extends React.Component {
 				      			return (
 										<div className='block' key={i}>
 						      		<div className='block1'>
-						      			<TextField floatingLabelText="景点名称" floatingLabelFixed={true} style={{marginRight:'20px'}}value={r.nameOfScene} onChange={(e) => {cache[index].route[i].nameOfScene = e.target.value;this.setState({cache: cache})}}/>
-						      			<TextField floatingLabelText="坐标" floatingLabelFixed={true}style={{marginRight:'20px'}}value={JSON.stringify(r.location)} onChange={(e) => {cache[index].route[i].location = e.target.value ;this.setState({cache: cache})}}/>
-						      			<TextField floatingLabelText="是否是点" style={{marginRight:'20px'}}hintText="0/1" floatingLabelFixed={true} value={r.pointOrNot} onChange={(e) => {cache[index].route[i].pointOrNot = e.target.value;this.setState({cache: cache})}}/>
-						      			<TextField floatingLabelText="类别(0/1/2/3(景/吃/住/行))" hintText="0/1/2/3(景/吃/住/行)" floatingLabelFixed={true}value={r.category} onChange={(e) => {cache[index].route[i].category = e.target.value;this.setState({cache: cache})}}/>
-						      			<TextField floatingLabelText="图片地址" floatingLabelFixed={true}value={r.pic} onChange={(e) => {cache[index].route[i].pic = e.target.value;this.setState({cache: cache})}}/><br />
-						      			<TextField multiLine={true}rows={2}rowsMax={5}floatingLabelText="描述" floatingLabelFixed={true}value={r.des} onChange={(e) => {cache[index].route[i].des = e.target.value;this.setState({cache: cache})}}/>
+						      			<TextField 
+							      			floatingLabelText="景点名称" 
+							      			floatingLabelFixed={true} 
+							      			style={{marginRight:'20px'}}
+							      			value={r.nameOfScene} 
+							      			onChange={(e) => {cache[index].route[i].nameOfScene = e.target.value;this.setState({cache: cache})}}
+						      			/>
+						      			<TextField 
+							      			floatingLabelText="坐标" 
+							      			floatingLabelFixed={true}
+							      			style={{marginRight:'20px'}}
+							      			value={JSON.stringify(r.location)} 
+							      			onChange={(e) => {cache[index].route[i].location = e.target.value ;this.setState({cache: cache})}}
+						      			/>
+						      			<TextField 
+							      			floatingLabelText="是否是点" 
+							      			style={{marginRight:'20px'}}
+							      			hintText="0/1" 
+							      			floatingLabelFixed={true} 
+							      			value={r.pointOrNot} 
+							      			onChange={(e) => {cache[index].route[i].pointOrNot = e.target.value;this.setState({cache: cache})}}
+						      			/>
+						      			<TextField 
+							      			floatingLabelText="类别(0/1/2/3(景/吃/住/行))" 
+							      			hintText="0/1/2/3(景/吃/住/行)" 
+							      			floatingLabelFixed={true}
+							      			value={r.category} 
+							      			onChange={(e) => {cache[index].route[i].category = e.target.value;this.setState({cache: cache})}}
+						      			/>
+						      			<TextField 
+						      				multiLine={true}
+		      								rows={2}
+		      								rowsMax={4}
+							      			floatingLabelText="图片地址" 
+							      			floatingLabelFixed={true}
+							      			value={r.pic} 
+							      			onChange={(e) => {cache[index].route[i].pic = e.target.value;this.setState({cache: cache})}}
+						      			/>
+						      			<br />
+						      			<TextField 
+							      			multiLine={true}
+							      			rows={2}
+							      			rowsMax={5}
+							      			floatingLabelText="描述" 
+							      			floatingLabelFixed={true}
+							      			value={r.des} 
+							      			onChange={(e) => {cache[index].route[i].des = e.target.value;this.setState({cache: cache})}}
+						      			/>
 						      			<div className='index'>{i+1}</div>
 						      		</div>
 						      		<div>
