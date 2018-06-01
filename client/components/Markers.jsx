@@ -1,5 +1,6 @@
 import React from 'react'
 import {observer, inject} from 'mobx-react'
+import ContentAdd from 'material-ui/svg-icons/maps/my-location'
 const { Marker,InfoWindow } = require("react-google-maps")
 
 import CardComp from './card'

@@ -6,7 +6,6 @@ import IconButton from 'material-ui/IconButton'
 import NavigationClose from 'material-ui/svg-icons/navigation/close'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
-
 import {observer, inject} from 'mobx-react'
 
 const style = {
@@ -30,6 +29,11 @@ export default class DrawerOpenRightExample extends React.Component {
     this.props.testMobx.openinfoWindowByName(i)
   }
 
+  tapTitle(p){
+    this.props.testMobx.setCenter(p)
+    this.props.testMobx.changeDrawerState()
+  }
+
   render() {
     let points = this.props.testMobx.toJson().points
     return (
@@ -39,6 +43,7 @@ export default class DrawerOpenRightExample extends React.Component {
             title="详细路线" 
             iconElementLeft={<IconButton><NavigationClose /></IconButton>}
             onLeftIconButtonClick={this.handleClick.bind(this)}
+            onTitleClick={() => this.tapTitle(points[0].route[0].location)}
           />
           {
             points && points.length > 0
@@ -57,6 +62,6 @@ export default class DrawerOpenRightExample extends React.Component {
           }
         </Drawer>
       </div>
-    );
+    )
   }
 }

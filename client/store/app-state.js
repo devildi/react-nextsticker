@@ -4,27 +4,34 @@ import axios from 'axios'
 import data from '../../utils/data'
 
 export default class TestMobx {
-	constructor({isOpen, position, points, pointsP,points1, directions, all} = {isOpen: false, position: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], directions: null, all: []}) {
+	constructor({longPress, isOpen, position, center, points, pointsP, points1, directions, all} = {longPress: false, isOpen: false, position: {}, center: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], directions: null, all: []}) {
 		this.isOpen = isOpen
 	  this.position = position
+	  this.center = center
 	  this.points = points
 	  this.pointsP = pointsP
-	  this.points = points1
+	  this.points1 = points1
 	  this.directions = directions
 	  this.flag = null
 	  this.isLocating = false
+	  this.isLocatingAlways = false
 	  this.user = ''
 	  this.all = all
+	  this.id = null
+	  this.longPress = longPress
 	}
 
+	@observable longPress
 	@observable isOpen
 	@observable position
+	@observable center
 	@observable points
 	@observable pointsP
 	@observable points1
 	@observable directions
 	@observable all
 	@observable isLocating
+	@observable isLocatingAlways
 
 	@computed get msg() {
 		return `${this.name} say count is ${this.name}`
@@ -44,6 +51,7 @@ export default class TestMobx {
         lng: position.coords.longitude
       }
       this.position = pos
+      this.center = pos
       this.isLocating = false
     }, () => {
     	alert('定位失败！')
@@ -53,6 +61,35 @@ export default class TestMobx {
     })		
 	}
 
+	@action locationAlways() {
+		this.isLocatingAlways = true
+  	this.id = navigator.geolocation.watchPosition((position) => {
+    	const pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+      this.position = pos
+    }, () => {
+    	alert('定位失败！')
+    	if(this.isLocatingAlways){
+    		this.isLocatingAlways = false
+    	}
+    })
+    this.longPress = true
+	}
+
+	@action stopLocationAlways(){
+		navigator.geolocation.clearWatch(this.id)
+		this.id = null
+		this.isLocatingAlways = false
+		this.longPress = false
+		console.log('持续定位关闭！')
+	}
+
+	@action setCenter(p){
+		this.center = p
+	}
+
 	@action initData(){
 		let data = JSON.parse(window.localStorage.getItem("dataNextsticker"))
 		let user = window.localStorage.getItem("userNextsticker")
@@ -60,10 +97,13 @@ export default class TestMobx {
 			this.points = data.points
 			this.points1 = data.points1
 			this.position = data.position
+			this.center = data.center
 			this.user = user
 		} else {
 			this.points = []
 			this.points1 = []
+			this.flag = null
+			this.directions = null
 		}
 	}
 
@@ -172,6 +212,7 @@ export default class TestMobx {
       points1: toJS(this.points1),
       directions: toJS(this.directions),
       position: toJS(this.position),
+      center: toJS(this.center),
       all: toJS(this.all)
     }
   }

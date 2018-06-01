@@ -8,6 +8,7 @@ const isDev = process.env.NODE_ENV === 'development'
 const app = express()
 
 if (!isDev){
+	console.log('Production')
 	const SSRContent = require('../dist/ssr').default
 	const tpl = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8')
 	app.use('/public', express.static(path.join(__dirname, '../dist')))
@@ -17,6 +18,7 @@ if (!isDev){
 	})
 } else {
 	const devstatic = require('../utils/server')
+	console.log('Development')
 	devstatic(app)
 }
 

@@ -19,12 +19,15 @@ html,body{
   left:0;
 }
 .division {
+	margin-top: 20px;
 	padding: 10px;
+	background-color: #B0C4DE;
 }
 .block{
 	padding: 5px;
 	border: 1px solid #f0f0f0;
 	margin-bottom: 5px;
+	background-color: #f0f0f0
 }
 .btn{
 	width: 50px;
@@ -37,9 +40,6 @@ html,body{
 .title{
 	padding-top: 5px;
 	text-align: center;
-}
-.day{
-	background-color: #f0f0f0;
 }
 .index{
 	position: absolute;

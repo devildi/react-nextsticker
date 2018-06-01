@@ -25,7 +25,7 @@ const MyMapComponent = compose(
   <GoogleMap
     defaultZoom={13}
     defaultCenter={props.center}
-    center={props.whereAmI}
+    center={props.center}
   >	
 		<Marker 
 			position={props.whereAmI}
@@ -64,10 +64,11 @@ export default class MyComponent extends React.Component {
   render() {
   	let points = this.props.testMobx.toJson().points1
   	let position = this.props.testMobx.toJson().position
+    let center = this.props.testMobx.toJson().center
   	let directions = this.props.testMobx.toJson().directions
     return (
       <MyMapComponent
-      	center={position}
+      	center={center}
         points={points}
         whereAmI={position}
         directions={directions}

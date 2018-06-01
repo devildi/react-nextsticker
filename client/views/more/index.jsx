@@ -35,10 +35,8 @@ export default class extends React.Component {
 
 	bootstrap(){
 		return new Promise((resolve) => {
-      setTimeout(() => {
-        this.props.testMobx.count = 3
-        resolve(true)
-      })
+      //console.log(this.props)
+      resolve(true)
     })
 	}
 

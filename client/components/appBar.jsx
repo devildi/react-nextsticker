@@ -14,7 +14,7 @@ const styles = {
   },
 }
 
-class DialogExampleDialogDatePicker extends React.Component {
+class DialogExampleDialog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -81,6 +81,9 @@ export default class extends React.Component {
         return alert('你暂无定制行程！')
       }
     })
+    .catch((error)=> {
+      console.log(error)
+    })
   }
 
   login(){
@@ -105,7 +108,7 @@ export default class extends React.Component {
             :<FlatButton label="行程编号" onClick={this.login.bind(this)}/>
           }
         />
-        <DialogExampleDialogDatePicker 
+        <DialogExampleDialog 
           open={this.state.open} 
           login={this.login.bind(this)}
           fatch={this.fatch.bind(this)}

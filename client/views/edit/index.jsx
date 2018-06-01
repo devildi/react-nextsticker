@@ -14,7 +14,7 @@ import Dialog from 'material-ui/Dialog'
 
 var serialize = require('serialize-javascript')
 
-require('../../App.css');
+require('../../App.css')
 
 const url = '/api/admin/post'
 const cache1 = []
@@ -95,26 +95,46 @@ class App extends React.Component {
 	  })
   }
 
-  // upload(){
-  // 	axios.get('/api/admin/upload', {
-  // 		params: {
-	 //      picURL: this.state.pic
-	 //    }
-  // 	})
-  // 	.then(function (response) {
-  // 		console.log(response.data)
-		// 	if(response.data.data){
-		// 		this.setState({
-		// 			pic: response.data.data
-		// 		})
-		// 	} else{
-		// 		alert('上传图片失败，请重试！')
-		// 	}
-	 //  })
-	 //  .catch(function (error) {
-	 //    console.log(error)
-	 //  })
-  // }
+  upload(){
+  	const that = this
+  	axios.get('/api/admin/upload', {
+  		params: {
+	      picURL: this.state.pic
+	    }
+  	})
+  	.then(function (response) {
+			if(response.data.data){
+				that.setState({
+					pic: response.data.data
+				})
+				alert('上传图片成功!')
+			} else{
+				alert('上传图片失败，请重试！')
+			}
+	  })
+	  .catch(function (error) {
+	    console.log(error)
+	  })
+  }
+
+  find(){
+  	if(!this.state.name){
+  		return
+  	}
+  	axios.get('/api/admin/get', {
+  		params: {
+	      name: this.state.name
+	    }
+  	})
+  	.then(function (response) {
+			if(response.data.data.length > 0){
+				alert('该行程已经存在！')
+			}
+	  })
+	  .catch(function (error) {
+	    console.log(error)
+	  })
+  }
 
   render() {
   	let cache = this.state.cache
@@ -130,7 +150,8 @@ class App extends React.Component {
 	      	<TextField 
 		      	floatingLabelText="行程编号" 
 		      	floatingLabelFixed={true} 
-		      	value={this.state.name} 
+		      	value={this.state.name}
+		      	onBlur={this.find.bind(this)}
 		      	onChange={(e) => {this.setState({name: e.target.value})}}
 	      	/><br />
 	      	<TextField 
@@ -213,6 +234,8 @@ class App extends React.Component {
 		      			onChange={(e) => {this.setState({pic: e.target.value})}}
 	      			/>
 	      			<br />
+	      			<RaisedButton label="上传图片" primary={true} onClick={this.upload.bind(this)}/>
+	      			<br />
 	      			<TextField 
 		      			multiLine={true}
 		      			rows={2}
@@ -250,11 +273,11 @@ class App2 extends React.Component {
   	axios.get('/api/admin/get', {
   		params: {
 	      name: this.state.name,
-	      indexOfDay: this.state.indexOfDay
+	      indexOfDay: this.state.indexOfDay,
+	      from: 'edit'
 	    }
   	})
   	.then(function (response) {
-  		//console.log(response.data)
 			if(response.data.data.length > 0){
 				that.setState({cache: response.data.data})
 			} else{
@@ -273,7 +296,6 @@ class App2 extends React.Component {
 
   _save(){
   	let that = this
-  	console.log('save', this.state.cache)
   	axios.post('/api/admin/save', {
 			cache: this.state.cache
 		})
@@ -335,7 +357,6 @@ class App2 extends React.Component {
 				  {
 				  	cache.map((row, index) => (
 				  		<div className='division' key={index}>
-						 
 				      	<div className='day'>
 				      		<TextField 
 					      		floatingLabelText="行程第几天" 
@@ -347,7 +368,6 @@ class App2 extends React.Component {
 				      	<DatePicker value={new Date(cache[index].date)} onChange={(event, date) => {console.log(date);cache[index].date = date;this.setState({cache: cache});console.log(cache)}} hintText="具体日期" />
 				      	{
 				      		cache[index].route.map((r, i) => {
-				      			//console.log(r.location)
 				      			return (
 										<div className='block' key={i}>
 						      		<div className='block1'>
@@ -362,7 +382,7 @@ class App2 extends React.Component {
 							      			floatingLabelText="坐标" 
 							      			floatingLabelFixed={true}
 							      			style={{marginRight:'20px'}}
-							      			value={JSON.stringify(r.location)} 
+							      			value={r.location} 
 							      			onChange={(e) => {cache[index].route[i].location = e.target.value ;this.setState({cache: cache})}}
 						      			/>
 						      			<TextField 

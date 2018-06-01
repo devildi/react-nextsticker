@@ -81,8 +81,6 @@ export default class extends React.Component {
   }
 
   componentDidMount(){
-  	console.log(this.props)
-  	console.log(this.props.match.params.id)
   	if(this.props.match.params.id !== this.props.testMobx.user){
   		this.props.testMobx.getPersonalData(this.props.match.params.id)
   	}

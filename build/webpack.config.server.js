@@ -1,5 +1,5 @@
 const path = require('path')
-
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
@@ -27,9 +27,20 @@ const config = {
 				test: /.js$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/
+			},
+			{
+				test: /\.css$/,
+				include: path.resolve(__dirname, '../client'),
+				use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })
 			}
 		]
-	}
+	},
+	plugins: [
+    new ExtractTextPlugin("styles.css"),
+  ]
 }
 
 if(isDev){

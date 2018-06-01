@@ -10,7 +10,6 @@ import PropTypes from 'prop-types'
 import {observer, inject} from 'mobx-react'
 
 
-
 @inject('testMobx') @observer
 class IconMenuExampleSimple extends React.Component {
   static contextTypes = {
@@ -22,13 +21,12 @@ class IconMenuExampleSimple extends React.Component {
   }
 
   changePage(i){
-    console.log('afterPush', i)
     this.context.router.history.push(`/${i}`)
+    this.props.testMobx.flag = null
   }
 
   render(){
     let user = this.props.testMobx.user
-    console.log('fromappmenu',user)
     return(
       <div>
         <IconMenu
@@ -39,11 +37,6 @@ class IconMenuExampleSimple extends React.Component {
         >
           <MenuItem primaryText="路线详情" onClick={() => this.changePage('detail/' + user)}/>
           <MenuItem primaryText="更多线路" onClick={() => this.changePage('more')}/>
-          {
-            user && user === 'wudi'
-            ?<MenuItem primaryText="设计" onClick={() => this.changePage('edit')}/>
-            :null
-          }
           <Divider />
           <MenuItem primaryText="退出" onClick={this._delete.bind(this)}/>
         </IconMenu>

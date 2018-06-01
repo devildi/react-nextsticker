@@ -16,6 +16,13 @@ export default class extends React.Component {
 		this.props.testMobx.initData()
 	}
 
+	bootstrap(){
+		return new Promise((resolve) => {
+      //console.log(this.props.match)
+      resolve(true)
+    })
+	}
+
 	render() {
 		return (
 			<div className='container'>
