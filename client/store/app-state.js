@@ -4,7 +4,7 @@ import axios from 'axios'
 import data from '../../utils/data'
 
 export default class TestMobx {
-	constructor({longPress, isOpen, position, center, points, pointsP, points1, directions, all} = {longPress: false, isOpen: false, position: {}, center: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], directions: null, all: []}) {
+	constructor({isOpen, position, center, points, pointsP, points1, directions, all} = {isOpen: false, position: {}, center: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], directions: null, all: []}) {
 		this.isOpen = isOpen
 	  this.position = position
 	  this.center = center
@@ -18,10 +18,8 @@ export default class TestMobx {
 	  this.user = ''
 	  this.all = all
 	  this.id = null
-	  this.longPress = longPress
 	}
 
-	@observable longPress
 	@observable isOpen
 	@observable position
 	@observable center
@@ -54,11 +52,16 @@ export default class TestMobx {
       this.center = pos
       this.isLocating = false
     }, () => {
-    	alert('定位失败！')
+    	alert('谷歌地图定位失败！')
     	if(this.isLocating){
     		this.isLocating = false
     	}
-    })		
+    }, {
+	    	enableHighAccuracy: true,
+			  timeout: 5000,
+			  maximumAge: 0
+    	}
+    )		
 	}
 
 	@action locationAlways() {
@@ -70,24 +73,31 @@ export default class TestMobx {
       }
       this.position = pos
     }, () => {
-    	alert('定位失败！')
+    	alert('谷歌地图持续定位失败！')
     	if(this.isLocatingAlways){
     		this.isLocatingAlways = false
     	}
-    })
-    this.longPress = true
+    }, {
+	    	enableHighAccuracy: true,
+			  timeout: 5000,
+			  maximumAge: 0
+    	}
+    )
+    this.isLocatingAlways = true
 	}
 
-	@action stopLocationAlways(){
+	@action stopLocationAlways(){	
 		navigator.geolocation.clearWatch(this.id)
 		this.id = null
 		this.isLocatingAlways = false
-		this.longPress = false
-		console.log('持续定位关闭！')
 	}
 
 	@action setCenter(p){
 		this.center = p
+	}
+
+	@action setMyself(p){
+		this.position = p
 	}
 
 	@action initData(){
@@ -201,6 +211,13 @@ export default class TestMobx {
 	@action findWay(result, index){
 		let array = this.toJson().points1
 		array[index].detail = result.routes[0].legs[0].distance.text+'/'+result.routes[0].legs[0].duration.text
+		this.points1 = array
+		this.directions = result
+	}
+
+	@action findWayInGaode(result, index){
+		let array = this.toJson().points1
+		array[index].detail = result
 		this.points1 = array
 		this.directions = result
 	}

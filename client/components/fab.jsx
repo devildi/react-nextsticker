@@ -14,6 +14,12 @@ const style = {
 	},
 	snackbar: {
 		textAlign: 'center'
+	},
+	fab1: {
+	  position: 'fixed',
+		bottom: 90,
+		left: 20,
+		zIndex: 100
 	}
 }
 
@@ -37,27 +43,11 @@ export default class FloatingActionButtonExampleSimple extends React.Component {
 	}
 
 	click1(){
-		this.props.testMobx.stopLocationAlways()
-	}
-
-	one(){
-		timeOutEvent = setTimeout(() => {
-			timeOutEvent = 0
+		if(!this.props.testMobx.isLocatingAlways){
 			this.props.testMobx.locationAlways()
-		}, 1000)
-	}
-
-	two(){
-		clearTimeout(timeOutEvent)
-		timeOutEvent = 0
-	}
-
-	three(){
-		clearTimeout(timeOutEvent)
-		if(timeOutEvent !== 0){
-			
+		} else {
+			this.props.testMobx.stopLocationAlways()
 		}
-		return false
 	}
 
 	stop(){
@@ -68,30 +58,28 @@ export default class FloatingActionButtonExampleSimple extends React.Component {
 		return (
 			<div>
 			{
-				this.props.testMobx.longPress 
-				?<FloatingActionButton
+				!this.props.testMobx.isLocatingAlways
+				?<FloatingActionButton 
+					style={style.fab1} 
+					onClick={this.click.bind(this)}
+					disabled={this.props.testMobx.isLocating}
+				>
+				  <ContentAdd />
+				</FloatingActionButton>
+				: null
+			}
+				<FloatingActionButton
 				  secondary={true}
 					style={style.fab} 
 					onClick={this.click1.bind(this)}
 				>
 				  <ContentAdd />
 				</FloatingActionButton>
-				:<FloatingActionButton 
-					style={style.fab} 
-					onClick={this.click.bind(this)}
-					disabled={this.props.testMobx.isLocating}
-					onTouchStart={this.one.bind(this)}
-					onTouchMove={this.two.bind(this)}
-					onTouchEnd={this.three.bind(this)}
-				>
-				  <ContentAdd />
-				</FloatingActionButton>
-			}
 				<Bar open={this.props.testMobx.isLocating} message='定位中，请稍后'/>
 				<Bar 
 					open={this.props.testMobx.isLocatingAlways} 
-					message='持续定位中！' 
-					autoHideDuration={4000}
+					message='持续定位已开启！' 
+					autoHideDuration={2000}
 				/>
 			</div>
 		)

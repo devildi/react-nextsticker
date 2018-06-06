@@ -28,6 +28,7 @@ class App extends React.Component {
     	author : '',
     	indexOfDay: '',
     	date: null,
+    	useGoogle: '',
     	nameOfScene: '',
     	location: '',
     	des: '',
@@ -39,7 +40,7 @@ class App extends React.Component {
 
   _add(){
   	var that = this
-		if(!this.state.nameOfScene || !this.state.location || !this.state.des || !this.state.pointOrNot ||!this.state.category||!this.state.pic){
+		if(!this.state.nameOfScene || !this.state.location || !this.state.des || !this.state.pointOrNot ||!this.state.category || !this.state.pic){
 			return alert('有空未填！')
 		}
   	cache1.push({
@@ -69,7 +70,7 @@ class App extends React.Component {
   }
 
   _submit(){
-  	if(!this.state.author ||!this.state.tripName ||!this.state.name || !this.state.indexOfDay || !this.state.date){
+  	if(!this.state.author ||!this.state.tripName ||!this.state.name || !this.state.indexOfDay || !this.state.date || !this.state.useGoogle){
 			return alert('有空未填！')
 		}
 		if(!this.state.cache.length){
@@ -82,6 +83,7 @@ class App extends React.Component {
 			author: this.state.author,
 			indexOfDay: this.state.indexOfDay,
 			date: this.state.date,
+			useGoogle: this.state.useGoogle,
 			cache: cache1
 		})
 		.then(function (response) {
@@ -171,6 +173,12 @@ class App extends React.Component {
 		      	floatingLabelFixed={true} 
 		      	value={this.state.indexOfDay} 
 		      	onChange={(e) => {this.setState({indexOfDay: e.target.value})}}
+	      	/><br />
+	      	<TextField 
+		      	floatingLabelText="是否使用谷歌地图" 
+		      	floatingLabelFixed={true} 
+		      	value={this.state.useGoogle} 
+		      	onChange={(e) => {this.setState({useGoogle: e.target.value})}}
 	      	/><br />
 	      	<DatePicker 
 		      	value={this.state.date} 
@@ -354,6 +362,11 @@ class App2 extends React.Component {
 				  <div className='title'>行程编号:{cache[0].user}</div>
 				  <div className='title'>行程名字:{cache[0].tripName}</div>
 				  <div className='title'>设计:{cache[0].author}</div>
+				  {
+				  	cache[0].useGoogle === 1
+				  	?<div className='title'>本次行程使用谷歌地图</div>
+				  	:<div className='title'>本次行程使用高德地图</div>
+				  }
 				  {
 				  	cache.map((row, index) => (
 				  		<div className='division' key={index}>

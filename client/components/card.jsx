@@ -6,7 +6,7 @@ import {observer, inject} from 'mobx-react'
 
 const style = {
  card: {
-	width: 400
+	width: 250
  },
  btn: {
 	float: 'right'
@@ -45,11 +45,10 @@ class CardExampleWithAvatar extends React.Component {
 			<Card style={style.card}>
 				<CardHeader
 					title={this.props.nameOfScene}
-					subtitle={this.props.nameOfScene}
 				/>
 					<GridList
 			      cols={1}
-			      cellHeight={200}
+			      cellHeight={100}
 			      padding={0}
 			    >
 		        <GridTile>
