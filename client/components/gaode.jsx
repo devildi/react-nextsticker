@@ -17,18 +17,50 @@ let walk = null
 let transfer = null
 
 @inject('testMobx') @observer
+class UIMarker extends React.Component {
+  constructor(props) {
+    super(props)
+    this.loadUI()
+  }
+
+  loadUI() {
+    window.AMapUI.loadUI(['overlay/SimpleMarker'], (SimpleMarker) => {
+      this.initPage(SimpleMarker)
+    })
+  }
+
+  initPage(SimpleMarker) {
+    let uimarker = new SimpleMarker({
+        iconLabel: this.props.label,
+        iconTheme: 'default',
+        iconStyle: 'red',
+        map: this.props.__map__,
+        position: this.props.position
+    })
+   
+    uimarker.on('click', () => {
+      this.props.testMobx.openinfoWindow(this.props.index)
+    })
+  }
+
+  render() {
+    return null
+  }
+}
+
+@inject('testMobx') @observer
 class Geolocation extends React.Component {
   constructor(props) {
     super(props)
     if (typeof window !== 'undefined') {
       if (!props.__map__) {
-        throw new Error('Geolocation has to be a child of Map component');
+        throw new Error('Geolocation has to be a child of Map component')
       } else {
-        this.map = props.__map__;
-        this.element = props.__ele__;
+        this.map = props.__map__
+        this.element = props.__ele__
 
         this.resolveGeolocation(props).then(() => {
-          this.triggerCreated(props);
+          this.triggerCreated(props)
           this.map.addControl(this.geolocation)
           this.geolocation.getCurrentPosition()
           window.AMap.event.addListener(this.geolocation, 'complete', (data) => {
@@ -74,15 +106,30 @@ class Geolocation extends React.Component {
   }
 }
 
-const  DirectionsRenderer = (props) => {
-	const map = props.__map__
-  map.plugin('AMap.Walking', function() {
-	  walk = new AMap.Walking({map: map})
-	})
-	map.plugin('AMap.Transfer', function() {
-	  transfer = new AMap.Transfer({city: props.city, map: map})	
-	})
-  return null
+class DirectionsRenderer extends React.Component {
+	constructor(props) {
+	  super(props)
+	  const map = props.__map__
+		window.AMap.service('AMap.Walking', function() {
+	  	walk = new AMap.Walking({
+	  		map: map
+	  	})
+		})
+		window.AMap.service('AMap.Transfer', function() {
+		  transfer = new AMap.Transfer({
+		  	city: props.city, 
+		  	map: map
+		  })	
+		})
+	}
+
+	shouldComponentUpdate() {
+    return false
+  }
+	  
+  render(){
+    return null
+  }
 }
 
 const style = {
@@ -117,47 +164,14 @@ export default class extends React.Component{
 		if(s === 'step'){
 			walk.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
 	    	let result1 = '步行方案：'+'需步行'+result.routes[0].distance + '米/用时' + Math.ceil(result.routes[0].time/60) +'分钟'
-	    	//this.props.testMobx.findWayInGaode(result1, i)
-	    	alert(result1)
+	    	this.props.testMobx.findWayInGaode(result1, i)
 	    })
 		} else {
 			transfer.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
 	    	let result1 = '公交方案：'+'需步行'+result.plans[0].walking_distance + '米/用时' + Math.ceil(result.plans[0].time/60) +'分钟'
-	   		//this.props.testMobx.findWayInGaode(result1, i)
-	   		alert(result1)
+	   		this.props.testMobx.findWayInGaode(result1, i)
 	   	})
 		}
-		// if(s === 'step'){
-		// 	this.walkPromise(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location)
-		// 	.then((data) => {
-		// 		alert(data)
-		// 	})
-		// } else{
-		// 	this.transferPromise(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location)
-		// 	.then((data) => {
-		// 		alert(data)
-		// 	})
-		// }
-	}
-
-	walkPromise(from, to){
-		return new Promise((resolve) => {
-			walk.search(from, to, (status, result) => {
-				let result1 = '步行方案：'+'需步行'+result.routes[0].distance + '米/用时' + Math.ceil(result.routes[0].time/60) +'分钟'
-				
-				resolve(result1)
-			}) 
-		})
-	}
-
-	transferPromise(from, to){
-		return new Promise((resolve) => {
-			transfer.search(from, to, (status, result) => {
-				let result1 = '公交方案：'+'需步行'+result.plans[0].walking_distance + '米/用时' + Math.ceil(result.plans[0].time/60) +'分钟'
-				
-				resolve(result1)
-			}) 
-		})
 	}
 
 	handleTogglePrps(i){
@@ -174,24 +188,19 @@ export default class extends React.Component{
 	      	zoom={12}
 	      	resizeEnable={true}
       		mapStyle={'fresh'}
+      		useAMapUI
 	      >
 	      	<Geolocation {...pluginProps} />
 	      	<DirectionsRenderer city='沈阳'/>
 	      	{
 	      		points && points.length
 	      		?	points.map((row, index) => (
-							<Marker
-								clickable
-			      		position={row.location}
-			      		key={index}
-			      	>
-						    <div 
-						    	onClick={() => this.handleTogglePrps(index)}
-						    	style={style.marker}
-						    >
-						    	{index + 1}
-						    </div>
-						  </Marker>
+							<UIMarker
+							 	position={row.location}
+							 	key={index}
+							 	label={index+1}
+							 	index={index}
+							/>
 	      		))
 	      		: null
 	      	}
@@ -202,7 +211,7 @@ export default class extends React.Component{
 		            position={row.location}
 		            visible={row.isOpen}
 		            isCustom={true}
-		            offset={[11, -20]}
+		            offset={[0, -25]}
 		            key={index}
 		          >
 		          	<MuiThemeProvider>

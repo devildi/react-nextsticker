@@ -78,7 +78,7 @@ export default class extends React.Component {
     this.props.testMobx.fatchData(i)
     .then((data) => {
       if(data.length === 0){
-        return alert('你暂无定制行程！')
+        return alert('暂无定制行程！')
       }
     })
     .catch((error)=> {
