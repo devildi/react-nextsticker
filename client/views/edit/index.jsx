@@ -23,12 +23,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+    	//元信息
     	name : '',
     	tripName : '',
     	author : '',
     	indexOfDay: '',
     	date: null,
     	useGoogle: '',
+    	city: '',
+    	//点信息
     	nameOfScene: '',
     	location: '',
     	des: '',
@@ -50,8 +53,8 @@ class App extends React.Component {
   		pointOrNot: this.state.pointOrNot,
   		category: this.state.category,
   		pic: this.state.pic,
-  		isOpen: false,
-  		detail: ''
+  		isOpen: false,//控制窗口
+  		detail: ''//公交步行信息
   	})
   	this.setState({
   		cache: cache1,
@@ -70,7 +73,7 @@ class App extends React.Component {
   }
 
   _submit(){
-  	if(!this.state.author ||!this.state.tripName ||!this.state.name || !this.state.indexOfDay || !this.state.date || !this.state.useGoogle){
+  	if(!this.state.city ||!this.state.author ||!this.state.tripName ||!this.state.name || !this.state.indexOfDay || !this.state.date || !this.state.useGoogle){
 			return alert('有空未填！')
 		}
 		if(!this.state.cache.length){
@@ -83,7 +86,9 @@ class App extends React.Component {
 			author: this.state.author,
 			indexOfDay: this.state.indexOfDay,
 			date: this.state.date,
+			city: this.state.city,
 			useGoogle: this.state.useGoogle,
+			//景点信息
 			cache: cache1
 		})
 		.then(function (response) {
@@ -169,6 +174,13 @@ class App extends React.Component {
 		      	onChange={(e) => {this.setState({author: e.target.value})}}
 	      	/><br />
 	      	<TextField 
+		      	floatingLabelText="途径城市"
+		      	hintText="北京,上海,东京(用英文‘,’)"
+		      	floatingLabelFixed={true} 
+		      	value={this.state.city} 
+		      	onChange={(e) => {this.setState({author: e.target.value})}}
+	      	/><br />
+	      	<TextField 
 		      	floatingLabelText="行程第几天" 
 		      	floatingLabelFixed={true} 
 		      	value={this.state.indexOfDay} 
@@ -216,14 +228,16 @@ class App extends React.Component {
 		      			floatingLabelFixed={true}
 		      			hintText='{"lat": "4", "lng": "1"}'
 		      			style={{marginRight:'20px'}}
-		      			value={this.state.location} onChange={(e) => {this.setState({location: e.target.value})}}
+		      			value={this.state.location} 
+		      			onChange={(e) => {this.setState({location: e.target.value})}}
 	      			/>
 	      			<TextField 
 		      			floatingLabelText="是否是点" 
 		      			hintText="0/1" 
 		      			style={{marginRight:'20px'}}
 		      			floatingLabelFixed={true}
-		      			value={this.state.pointOrNot} onChange={(e) => {this.setState({pointOrNot: e.target.value})}}
+		      			value={this.state.pointOrNot} 
+		      			onChange={(e) => {this.setState({pointOrNot: e.target.value})}}
 	      			/>
 	      			<TextField 
 		      			floatingLabelText="类别" 
@@ -242,7 +256,11 @@ class App extends React.Component {
 		      			onChange={(e) => {this.setState({pic: e.target.value})}}
 	      			/>
 	      			<br />
-	      			<RaisedButton label="上传图片" primary={true} onClick={this.upload.bind(this)}/>
+	      			<RaisedButton 
+		      			label="上传图片" 
+		      			primary={true} 
+		      			onClick={this.upload.bind(this)}
+	      			/>
 	      			<br />
 	      			<TextField 
 		      			multiLine={true}
@@ -254,7 +272,11 @@ class App extends React.Component {
 		      			onChange={(e) => {this.setState({des: e.target.value})}}
 	      			/>
 	      		</div>
-	      		<RaisedButton label="添加" primary={true} onClick={this._add.bind(this)}/>
+	      		<RaisedButton 
+		      		label="添加" 
+		      		primary={true} 
+		      		onClick={this._add.bind(this)}
+	      		/>
 	      	</div>      	
 	      </div>
       </div>
@@ -287,7 +309,11 @@ class App2 extends React.Component {
   	})
   	.then(function (response) {
 			if(response.data.data.length > 0){
-				that.setState({cache: response.data.data})
+				//console.log(response.data)
+				that.setState({
+					cache: response.data.data
+
+				})
 			} else{
 				alert('您暂时没有相关定制数据！')
 			}
@@ -305,7 +331,8 @@ class App2 extends React.Component {
   _save(){
   	let that = this
   	axios.post('/api/admin/save', {
-			cache: this.state.cache
+			cache: this.state.cache,
+			city: this.state.city
 		})
 		.then(function (response) {
 			if(response){
@@ -367,6 +394,15 @@ class App2 extends React.Component {
 				  	?<div className='title'>本次行程使用谷歌地图</div>
 				  	:<div className='title'>本次行程使用高德地图</div>
 				  }
+				  <div className='title'>
+					  <TextField 
+		      		floatingLabelText="途径"
+		      		hintText="北京,上海,东京(用英文‘,’)"
+		      		floatingLabelFixed={true} 
+		      		value={cache[0].city} 
+		      		onChange={(e) => {cache[0].city = e.target.value;this.setState({cache: cache})}}
+	      		/>
+      		</div>
 				  {
 				  	cache.map((row, index) => (
 				  		<div className='division' key={index}>
@@ -422,7 +458,7 @@ class App2 extends React.Component {
 							      			value={r.pic} 
 							      			onChange={(e) => {cache[index].route[i].pic = e.target.value;this.setState({cache: cache})}}
 						      			/>
-						      			<br />
+						      			<br/>
 						      			<TextField 
 							      			multiLine={true}
 							      			rows={2}
@@ -435,8 +471,17 @@ class App2 extends React.Component {
 						      			<div className='index'>{i+1}</div>
 						      		</div>
 						      		<div>
-							      		<RaisedButton label="DELETE" primary={true} onClick={() => {this._delete(index, i, cache)}}/>
-							      		<RaisedButton style={{float: 'right'}} label="SAVE" primary={true} onClick={this._save.bind(this)}/>
+							      		<RaisedButton 
+								      		label="DELETE" 
+								      		primary={true} 
+								      		onClick={() => {this._delete(index, i, cache)}}
+							      		/>
+							      		<RaisedButton 
+								      		style={{float: 'right'}} 
+								      		label="SAVE" 
+								      		primary={true} 
+								      		onClick={this._save.bind(this)}
+							      		/>
 							      	</div>
 						      	</div>
 				      		)})

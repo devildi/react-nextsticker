@@ -179,8 +179,14 @@ export default class extends React.Component{
 	}
 
   render(){
+  	let pointsForCity = this.props.testMobx.toJson().points
   	let points = this.props.testMobx.toJson().points1
   	let position = this.props.testMobx.toJson().position
+  	let cityArray = null
+    if(pointsForCity && pointsForCity.length > 0){
+      cityArray = pointsForCity[0].city.split(",")
+    }
+    console.log(cityArray)
     return (
 			<div style={{width: '100%', height: '100%'}}>
 	      <Map 
@@ -191,7 +197,7 @@ export default class extends React.Component{
       		useAMapUI
 	      >
 	      	<Geolocation {...pluginProps} />
-	      	<DirectionsRenderer city='沈阳'/>
+	      	<DirectionsRenderer city={cityArray && cityArray[0]}/>
 	      	{
 	      		points && points.length
 	      		?	points.map((row, index) => (

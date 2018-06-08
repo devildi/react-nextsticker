@@ -38,12 +38,18 @@ export default class DrawerOpenRightExample extends React.Component {
     let points = this.props.testMobx.toJson().points
     return (
       <div>
-        <Drawer width={200} docked={false} onRequestChange={this.handleClick.bind(this)} openSecondary={true} open={this.props.testMobx.isOpen} >
+        <Drawer 
+          width={200} 
+          docked={false} 
+          onRequestChange={this.handleClick.bind(this)} 
+          openSecondary={true} 
+          open={this.props.testMobx.isOpen} 
+        >
           <AppBar 
-            title="详细路线" 
+            title={'详细路线'}
             iconElementLeft={<IconButton><NavigationClose /></IconButton>}
             onLeftIconButtonClick={this.handleClick.bind(this)}
-            onTitleClick={() => this.tapTitle(points[0].route[0].location)}
+            //onTitleClick={() => this.tapTitle(points[0].route[0].location)}
           />
           {
             points && points.length > 0
