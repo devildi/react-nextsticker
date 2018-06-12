@@ -100,7 +100,8 @@ export default class TestMobx {
 		this.position = p
 	}
 
-	@action initData(){
+	@action initData(i){
+		let cache = this.toJson().points
 		let data = JSON.parse(window.localStorage.getItem("dataNextsticker"))
 		let user = window.localStorage.getItem("userNextsticker")
 		if(data){
@@ -114,6 +115,11 @@ export default class TestMobx {
 			this.points1 = []
 			this.flag = null
 			this.directions = null
+			if(i){
+				if(cache[0].useGoogle === '0'){
+					window.location.reload()
+				}
+			}
 		}
 	}
 

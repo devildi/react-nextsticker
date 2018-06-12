@@ -17,7 +17,7 @@ class IconMenuExampleSimple extends React.Component {
   }
   _delete(){
     window.localStorage.clear()
-    this.props.testMobx.initData()
+    this.props.testMobx.initData('logout')
   }
 
   changePage(i){

@@ -37,7 +37,7 @@ class UIMarker extends React.Component {
         map: this.props.__map__,
         position: this.props.position
     })
-   
+  
     uimarker.on('click', () => {
       this.props.testMobx.openinfoWindow(this.props.index)
     })
@@ -117,7 +117,7 @@ class DirectionsRenderer extends React.Component {
 		})
 		window.AMap.service('AMap.Transfer', function() {
 		  transfer = new AMap.Transfer({
-		  	city: props.city, 
+		  	city: '青岛', 
 		  	map: map
 		  })	
 		})
@@ -163,13 +163,21 @@ export default class extends React.Component{
 		transfer.clear()
 		if(s === 'step'){
 			walk.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
-	    	let result1 = '步行方案：'+'需步行'+result.routes[0].distance + '米/用时' + Math.ceil(result.routes[0].time/60) +'分钟'
-	    	this.props.testMobx.findWayInGaode(result1, i)
+	    	if(result){
+					let result1 = '步行方案：'+'需步行'+result.routes[0].distance + '米/用时' + Math.ceil(result.routes[0].time/60) +'分钟'
+		    	this.props.testMobx.findWayInGaode(result1, i)
+	    	} else{
+					alert('暂无结果！')
+	    	}
 	    })
 		} else {
 			transfer.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
-	    	let result1 = '公交方案：'+'需步行'+result.plans[0].walking_distance + '米/用时' + Math.ceil(result.plans[0].time/60) +'分钟'
-	   		this.props.testMobx.findWayInGaode(result1, i)
+	    	if(result.plans && result.plans.length > 0 ) {
+	    		let result1 = '公交方案：'+'需步行'+result.plans[0].walking_distance + '米/用时' + Math.ceil(result.plans[0].time/60) +'分钟'
+	    		this.props.testMobx.findWayInGaode(result1, i)
+	    	} else {
+	    		alert('暂无结果！')
+	    	}  		
 	   	})
 		}
 	}
@@ -186,12 +194,11 @@ export default class extends React.Component{
     if(pointsForCity && pointsForCity.length > 0){
       cityArray = pointsForCity[0].city.split(",")
     }
-    console.log(cityArray)
     return (
 			<div style={{width: '100%', height: '100%'}}>
 	      <Map 
 	      	amapkey={'fbe59813637de60223e3d22805a2486c'}
-	      	zoom={12}
+	      	zoom={15}
 	      	resizeEnable={true}
       		mapStyle={'fresh'}
       		useAMapUI
@@ -200,8 +207,7 @@ export default class extends React.Component{
 	      	<DirectionsRenderer city={cityArray && cityArray[0]}/>
 	      	{
 	      		points && points.length
-	      		?	points.map((row, index) => (
-							<UIMarker
+	      		?	points.map((row, index) => (<UIMarker
 							 	position={row.location}
 							 	key={index}
 							 	label={index+1}
