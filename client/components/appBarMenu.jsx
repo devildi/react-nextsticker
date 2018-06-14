@@ -23,6 +23,7 @@ class IconMenuExampleSimple extends React.Component {
   changePage(i){
     this.context.router.history.push(`/${i}`)
     this.props.testMobx.flag = null
+    this.props.testMobx.dinnerFlag = null
   }
 
   render(){
