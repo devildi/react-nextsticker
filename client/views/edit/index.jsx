@@ -93,8 +93,12 @@ class App extends React.Component {
 		})
 		.then(function (response) {
 			if(response.data){
-				alert('完成当日规划！')
-				history.go(0)
+				if(response.data.success){
+					alert('完成当日规划！')
+				} else{
+					alert('失败！')
+				}		
+				//history.go(0)
 			}
 	  })
 	  .catch(function (error) {
@@ -178,7 +182,7 @@ class App extends React.Component {
 		      	hintText="北京,上海,东京(用英文‘,’)"
 		      	floatingLabelFixed={true} 
 		      	value={this.state.city} 
-		      	onChange={(e) => {this.setState({author: e.target.value})}}
+		      	onChange={(e) => {this.setState({city: e.target.value})}}
 	      	/><br />
 	      	<TextField 
 		      	floatingLabelText="行程第几天" 
@@ -194,7 +198,7 @@ class App extends React.Component {
 	      	/><br />
 	      	<DatePicker 
 		      	value={this.state.date} 
-		      	onChange={(event, date) => {console.log(date);this.setState({date: date})}} 
+		      	onChange={(event, date) => {this.setState({date: date})}} 
 		      	hintText="具体日期" 
 	      	/>
 	      	{

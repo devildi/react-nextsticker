@@ -79,6 +79,9 @@ export default class extends React.Component {
     .then((data) => {
       if(data.length === 0){
         return alert('暂无定制行程！')
+      } else {
+        this.props.testMobx.controliSnackbar('open')
+        return
       }
     })
     .catch((error)=> {

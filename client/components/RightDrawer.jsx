@@ -59,7 +59,14 @@ export default class DrawerOpenRightExample extends React.Component {
                   <Divider />
                   {
                     row.route && row.route.length > 0
-                    ? row.route.map((r,i) => (<MenuItem key={i} onClick={() => {this.handle(r.nameOfScene)}}>{r.nameOfScene}</MenuItem>))
+                    ? row.route.map((r,i) => 
+                        (
+                          <MenuItem 
+                            key={i} 
+                            onClick={() => {this.handle(r.nameOfScene)}}>{r.nameOfScene}
+                          </MenuItem>
+                        )
+                      )
                     : <div style={style}>无数据</div>
                   }
                 </div>

@@ -4,20 +4,24 @@ import axios from 'axios'
 import data from '../../utils/data'
 
 export default class TestMobx {
-	constructor({isOpen, position, center, points, pointsP, points1, directions, all} = {isOpen: false, position: {}, center: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], directions: null, all: []}) {
+	constructor({isOpen, position, center, points, pointsP, points1, dinner, hotel, directions, all} = {isOpen: false, position: {}, center: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], dinner: [], hotel: [], directions: null, all: []}) {
 		this.isOpen = isOpen
 	  this.position = position
 	  this.center = center
 	  this.points = points
 	  this.pointsP = pointsP
 	  this.points1 = points1
+	  this.dinner = dinner
+	  this.hotel = hotel
 	  this.directions = directions
 	  this.flag = null
+	  this.dinnerFlag = null
 	  this.isLocating = false
 	  this.isLocatingAlways = false
 	  this.user = ''
 	  this.all = all
 	  this.id = null
+	  this.stateOfSnackbar = false
 	}
 
 	@observable isOpen
@@ -26,10 +30,13 @@ export default class TestMobx {
 	@observable points
 	@observable pointsP
 	@observable points1
+	@observable dinner
+	@observable hotel
 	@observable directions
 	@observable all
 	@observable isLocating
 	@observable isLocatingAlways
+	@observable stateOfSnackbar
 
 	@computed get msg() {
 		return `${this.name} say count is ${this.name}`
@@ -37,6 +44,14 @@ export default class TestMobx {
 
 	@action changeDrawerState() {
 		this.isOpen = !this.isOpen
+	}
+
+	@action controliSnackbar(i){
+		if(i === 'open'){
+			this.stateOfSnackbar = true
+		} else {
+			this.stateOfSnackbar = false
+		}
 	}
 
 	@action location(i) {
@@ -107,12 +122,16 @@ export default class TestMobx {
 		if(data){
 			this.points = data.points
 			this.points1 = data.points1
+			this.dinner = data.dinner
+			this.hotel = data.hotel
 			this.position = data.position
 			this.center = data.center
 			this.user = user
 		} else {
 			this.points = []
 			this.points1 = []
+			this.dinner = []
+			this.hotel = []
 			this.flag = null
 			this.directions = null
 			if(i){
@@ -127,12 +146,14 @@ export default class TestMobx {
 		return new Promise((resolve, reject) => {
 			axios.get('/api/admin/get',{
 				params: {
-		      name: i
+		      name: i.trim()
 		    }
 			})
 			.then((data) => {
 				this.points = data.data.data
 				this.points1 = data.data.data1
+				this.dinner = data.data.dinner
+				this.hotel = data.data.hotel
 				this.user = i
 				this.save()
 				resolve(data.data.data)
@@ -166,6 +187,11 @@ export default class TestMobx {
 	}
 
 	@action openinfoWindow(j){
+
+		if(this.dinnerFlag !== null){
+			this.openDinnerinfoWindow(this.dinnerFlag)
+		}
+
 		let array = this.toJson().points1
 		if(this.flag === null){
 			array[j].isOpen = !array[j].isOpen
@@ -179,6 +205,7 @@ export default class TestMobx {
 		} else {
 			array[j].isOpen = !array[j].isOpen
 			this.points1 = array
+			this.flag = null
 		}
 	}
 
@@ -187,6 +214,29 @@ export default class TestMobx {
 		array[j].isOpen = !array[j].isOpen
 		this.points1 = array
 		this.flag = null
+	}
+
+	@action openDinnerinfoWindow(j){
+
+		if(this.flag !== null){
+			this.openinfoWindow(this.flag)
+		}
+
+		let array = this.toJson().dinner
+		if(this.dinnerFlag === null){
+			array[j].isOpen = !array[j].isOpen
+			this.dinner = array
+			this.dinnerFlag = j
+		} else if(j !== this.dinnerFlag) {
+			array[this.dinnerFlag].isOpen = !array[this.dinnerFlag].isOpen
+			array[j].isOpen = !array[j].isOpen
+			this.dinner = array
+			this.dinnerFlag = j
+		} else {
+			array[j].isOpen = !array[j].isOpen
+			this.dinner = array
+			this.dinnerFlag = null
+		}
 	}
 
 	@action openinfoWindowByName(name){
@@ -233,6 +283,8 @@ export default class TestMobx {
       points: toJS(this.points),
       pointsP: toJS(this.pointsP),
       points1: toJS(this.points1),
+      dinner: toJS(this.dinner),
+      hotel: toJS(this.hotel),
       directions: toJS(this.directions),
       position: toJS(this.position),
       center: toJS(this.center),

@@ -5,6 +5,7 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import RaisedButton from 'material-ui/RaisedButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {GridList, GridTile} from 'material-ui/GridList'
+import Snackbar from 'material-ui/Snackbar'
 import {observer, inject} from 'mobx-react'
 
 const pluginProps = {
@@ -29,17 +30,44 @@ class UIMarker extends React.Component {
     })
   }
 
+  geticonLabel(cat, label){
+  	if(cat === '0'){
+  		return {
+  			label,
+  			iconTheme: 'default',
+  			iconStyle: 'red'
+  		}
+  	} else if(cat === '1') {
+  		return {
+  			iconLabel: 'F',
+  			iconTheme: 'numv1',
+  			iconStyle: 'blue'
+  		}
+  	} else {
+  		return {
+  			iconLabel: 'H',
+  			iconTheme: 'numv2',
+  			iconStyle: 'black'
+  		}
+  	}
+  }
+
   initPage(SimpleMarker) {
     let uimarker = new SimpleMarker({
-        iconLabel: this.props.label,
-        iconTheme: 'default',
-        iconStyle: 'red',
+        iconLabel: this.geticonLabel(this.props.cat, this.props.label).label,
+        iconTheme: this.geticonLabel(this.props.cat, this.props.label).iconTheme,
+        iconStyle: this.geticonLabel(this.props.cat, this.props.label).iconStyle,
         map: this.props.__map__,
         position: this.props.position
     })
   
     uimarker.on('click', () => {
-      this.props.testMobx.openinfoWindow(this.props.index)
+    	if(this.props.cat === '0') {
+    		this.props.testMobx.openinfoWindow(this.props.index)
+    	} else if(this.props.cat === '1'){
+    		this.props.testMobx.openDinnerinfoWindow(this.props.index)
+    	}
+      
     })
   }
 
@@ -68,7 +96,7 @@ class Geolocation extends React.Component {
   					this.props.testMobx.setMyself(myPosition)
           })
     			window.AMap.event.addListener(this.geolocation, 'error', (data) => {
-    				clert('高德地图定位失败，请刷新页面！')
+    				alert('高德地图定位失败，请刷新页面！')
     			}) 
         })
       }
@@ -152,6 +180,9 @@ const style = {
 	},
 	snackbar: {
 		textAlign: 'center'
+	},
+	window: {
+		width: '250px'
 	}
 }
 
@@ -163,7 +194,7 @@ export default class extends React.Component{
 		transfer.clear()
 		if(s === 'step'){
 			walk.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
-	    	if(result){
+	    	if(result.routes && result.routes.length > 0){
 					let result1 = '步行方案：'+'需步行'+result.routes[0].distance + '米/用时' + Math.ceil(result.routes[0].time/60) +'分钟'
 		    	this.props.testMobx.findWayInGaode(result1, i)
 	    	} else{
@@ -186,14 +217,26 @@ export default class extends React.Component{
 		this.props.testMobx.openinfoWindow(i)
 	}
 
+	handleRequestClose(){
+		this.props.testMobx.controliSnackbar('close')
+	}
+
   render(){
   	let pointsForCity = this.props.testMobx.toJson().points
   	let points = this.props.testMobx.toJson().points1
+  	let dinner = this.props.testMobx.toJson().dinner
+  	let hotel = this.props.testMobx.toJson().hotel
   	let position = this.props.testMobx.toJson().position
   	let cityArray = null
     if(pointsForCity && pointsForCity.length > 0){
       cityArray = pointsForCity[0].city.split(",")
     }
+    // if(dinner && dinner.length){
+    // 	dinner.map((r,i) => {
+    // 		console.log(i,r.isOpen)
+    // 	})
+    // 	console.log('flag', this.props.testMobx.dinnerFlag)
+    // }
     return (
 			<div style={{width: '100%', height: '100%'}}>
 	      <Map 
@@ -207,11 +250,13 @@ export default class extends React.Component{
 	      	<DirectionsRenderer city={cityArray && cityArray[0]}/>
 	      	{
 	      		points && points.length
-	      		?	points.map((row, index) => (<UIMarker
+	      		?	points.map((row, index) => (
+	      			<UIMarker
 							 	position={row.location}
 							 	key={index}
 							 	label={index+1}
 							 	index={index}
+							 	cat={row.category}
 							/>
 	      		))
 	      		: null
@@ -227,13 +272,145 @@ export default class extends React.Component{
 		            key={index}
 		          >
 		          	<MuiThemeProvider>
-		          		<div>
+		          		<div style={style.window}>
 										<CardHeader
 											title={row.nameOfScene}
 										/>
 											<GridList
 									      cols={1}
-									      cellHeight={200}
+									      cellHeight={150}
+									      padding={0}
+									    >
+								        <GridTile>
+								          <img src={row.pic}/>
+								        </GridTile>
+									    </GridList>
+										<CardText>
+											{row.des}
+										</CardText>
+										{
+											row.detail && (
+										<CardText 
+											style={style.block}>
+											{row.detail}
+										</CardText>)
+										}
+										<CardActions>
+											<RaisedButton 
+												primary={true} 
+												label="公交" 
+												onClick={() => {this.handle('bus', index)}}
+											/>
+											<RaisedButton 
+												primary={true} 
+												label="步行"
+												style={style.btn}
+												onClick={() => {this.handle('step', index)}}
+											/>
+										</CardActions>
+									</div>
+		          	</MuiThemeProvider>
+          		</InfoWindow>
+	      		))
+	      		: null
+	      	}
+	      	{
+	      		dinner && dinner.length
+	      		?	dinner.map((row, index) => (
+	      			<UIMarker
+							 	position={row.location}
+							 	key={index}
+							 	label={index+1}
+							 	index={index}
+							 	cat={row.category}
+							/>
+	      		))
+	      		: null
+	      	}
+	      	{
+	      		dinner && dinner.length
+	      		?	dinner.map((row, index) => (
+							<InfoWindow
+		            position={row.location}
+		            visible={row.isOpen}
+		            isCustom={true}
+		            offset={[0, -25]}
+		            key={index}
+		          >
+		          	<MuiThemeProvider>
+		          		<div style={style.window}>
+										<CardHeader
+											title={row.nameOfScene}
+										/>
+											<GridList
+									      cols={1}
+									      cellHeight={150}
+									      padding={0}
+									    >
+								        <GridTile>
+								          <img src={row.pic}/>
+								        </GridTile>
+									    </GridList>
+										<CardText>
+											{row.des}
+										</CardText>
+										{
+											row.detail && (
+										<CardText 
+											style={style.block}>
+											{row.detail}
+										</CardText>)
+										}
+										<CardActions>
+											<RaisedButton 
+												primary={true} 
+												label="公交" 
+												onClick={() => {this.handle('bus', index)}}
+											/>
+											<RaisedButton 
+												primary={true} 
+												label="步行"
+												style={style.btn}
+												onClick={() => {this.handle('step', index)}}
+											/>
+										</CardActions>
+									</div>
+		          	</MuiThemeProvider>
+          		</InfoWindow>
+	      		))
+	      		: null
+	      	}
+	      	{
+	      		hotel && hotel.length
+	      		?	hotel.map((row, index) => (
+	      			<UIMarker
+							 	position={row.location}
+							 	key={index}
+							 	label={index+1}
+							 	index={index}
+							 	cat={row.category}
+							/>
+	      		))
+	      		: null
+	      	}
+	      	{
+	      		hotel && hotel.length
+	      		?	hotel.map((row, index) => (
+							<InfoWindow
+		            position={row.location}
+		            visible={row.isOpen}
+		            isCustom={true}
+		            offset={[0, -25]}
+		            key={index}
+		          >
+		          	<MuiThemeProvider>
+		          		<div style={style.window}>
+										<CardHeader
+											title={row.nameOfScene}
+										/>
+											<GridList
+									      cols={1}
+									      cellHeight={150}
 									      padding={0}
 									    >
 								        <GridTile>
@@ -270,6 +447,12 @@ export default class extends React.Component{
 	      		: null
 	      	}
 	      </Map>
+	      <Snackbar
+          open={this.props.testMobx.stateOfSnackbar}
+          message="已加载行程数据！"
+          autoHideDuration={3000}
+          onRequestClose={this.handleRequestClose.bind(this)}
+        />
 	    </div>
     )   
   }
