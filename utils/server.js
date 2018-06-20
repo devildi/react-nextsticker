@@ -11,7 +11,7 @@ const Helmet = require('react-helmet').default
 const serverConfig = require('../build/webpack.config.server')
 
 const tplURL = 'http://localhost:8888/public/ssr.ejs'
-
+//读模板文件
 const getTpl = () => {
 	return new Promise((resolve, reject) => {
 		axios.get(tplURL)

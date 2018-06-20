@@ -189,11 +189,19 @@ const style = {
 @inject('testMobx') @observer
 export default class extends React.Component{
 
-	handle(s, i){
+	handle(s, i, method){
+		let des = null
+		if(method === 'p'){
+			des = points[i].location
+		} else if(method === 'd') {
+			des = dinner[i].location
+		} else {
+			des = hotel[i].location
+		}
 		walk.clear()
 		transfer.clear()
 		if(s === 'step'){
-			walk.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
+			walk.search(this.props.testMobx.toJson().position, des , (status, result) => {
 	    	if(result.routes && result.routes.length > 0){
 					let result1 = '步行方案：'+'需步行'+result.routes[0].distance + '米/用时' + Math.ceil(result.routes[0].time/60) +'分钟'
 		    	this.props.testMobx.findWayInGaode(result1, i)
@@ -202,7 +210,7 @@ export default class extends React.Component{
 	    	}
 	    })
 		} else {
-			transfer.search(this.props.testMobx.toJson().position, this.props.testMobx.toJson().points1[i].location, (status, result) => {
+			transfer.search(this.props.testMobx.toJson().position, des, (status, result) => {
 	    	if(result.plans && result.plans.length > 0 ) {
 	    		let result1 = '公交方案：'+'需步行'+result.plans[0].walking_distance + '米/用时' + Math.ceil(result.plans[0].time/60) +'分钟'
 	    		this.props.testMobx.findWayInGaode(result1, i)
@@ -299,13 +307,13 @@ export default class extends React.Component{
 											<RaisedButton 
 												primary={true} 
 												label="公交" 
-												onClick={() => {this.handle('bus', index)}}
+												onClick={() => {this.handle('bus', index, 'p')}}
 											/>
 											<RaisedButton 
 												primary={true} 
 												label="步行"
 												style={style.btn}
-												onClick={() => {this.handle('step', index)}}
+												onClick={() => {this.handle('step', index, 'p')}}
 											/>
 										</CardActions>
 									</div>
@@ -365,13 +373,13 @@ export default class extends React.Component{
 											<RaisedButton 
 												primary={true} 
 												label="公交" 
-												onClick={() => {this.handle('bus', index)}}
+												onClick={() => {this.handle('bus', index, 'd')}}
 											/>
 											<RaisedButton 
 												primary={true} 
 												label="步行"
 												style={style.btn}
-												onClick={() => {this.handle('step', index)}}
+												onClick={() => {this.handle('step', index, 'd')}}
 											/>
 										</CardActions>
 									</div>
@@ -431,13 +439,13 @@ export default class extends React.Component{
 											<RaisedButton 
 												primary={true} 
 												label="公交" 
-												onClick={() => {this.handle('bus', index)}}
+												onClick={() => {this.handle('bus', index, 'h')}}
 											/>
 											<RaisedButton 
 												primary={true} 
 												label="步行"
 												style={style.btn}
-												onClick={() => {this.handle('step', index)}}
+												onClick={() => {this.handle('step', index, 'h')}}
 											/>
 										</CardActions>
 									</div>

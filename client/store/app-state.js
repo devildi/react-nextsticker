@@ -1,8 +1,5 @@
 import { observable, computed, autorun, action, toJS } from 'mobx'
 import axios from 'axios'
-
-import data from '../../utils/data'
-
 export default class TestMobx {
 	constructor({isOpen, position, center, points, pointsP, points1, dinner, hotel, directions, all} = {isOpen: false, position: {}, center: {lat: 39.908892, lng: 116.404165}, points: [],pointsP: [],points1: [], dinner: [], hotel: [], directions: null, all: []}) {
 		this.isOpen = isOpen

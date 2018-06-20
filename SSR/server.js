@@ -7,7 +7,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const app = express()
 
-if (!isDev){
+if(!isDev){
 	console.log('Production')
 	const SSRContent = require('../dist/ssr').default
 	const tpl = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8')
@@ -16,7 +16,7 @@ if (!isDev){
 		const appString = ReactSSR.renderToString(SSRContent)
 		res.send(tpl.replace('<app></app>', appString))
 	})
-} else {
+}else {
 	const devstatic = require('../utils/server')
 	console.log('Development')
 	devstatic(app)
