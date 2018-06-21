@@ -190,6 +190,9 @@ const style = {
 export default class extends React.Component{
 
 	handle(s, i, method){
+		let points = this.props.testMobx.toJson().points1
+  	let dinner = this.props.testMobx.toJson().dinner
+  	let hotel = this.props.testMobx.toJson().hotel
 		let des = null
 		if(method === 'p'){
 			des = points[i].location

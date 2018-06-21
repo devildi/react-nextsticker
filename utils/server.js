@@ -92,7 +92,6 @@ module.exports = function (app) {
 				const html = ejs.render(tpl, {
 					appString: content,
 					initialState: serialize(store),
-					//渲染title等标签
 					meta: helmet.meta.toString(),
 	        title: helmet.title.toString(),
 	        style: helmet.style.toString(),

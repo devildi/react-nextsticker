@@ -1,4 +1,8 @@
 const express = require('express')
+const favicon = require('serve-favicon')
+const bodyParser = require('body-parser')
+const session = require('express-session')
+
 const ReactSSR = require('react-dom/server')
 const fs = require('fs')
 const path = require('path')
@@ -6,6 +10,18 @@ const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 
 const app = express()
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(session({
+	maxAge: 10 * 60 * 1000,
+	name: 'cid',
+	resave: false,
+	saveUninitialized: false,
+	secret: '41538bc6dd'
+}))
+app.use(favicon(path.join(__dirname, '../favicon.ico')))
+
+app.use('/api', require('../utils/apiProxy'))
 
 if(!isDev){
 	console.log('Production')

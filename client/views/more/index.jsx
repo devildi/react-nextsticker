@@ -34,10 +34,14 @@ export default class extends React.Component {
   }
 
 	bootstrap(){
-		return new Promise((resolve) => {
-      //console.log(this.props)
-      resolve(true)
-    })
+		// return new Promise((resolve) => {
+  //     this.props.testMobx.getAll()
+  //     resolve(true)
+  //   })
+  // console.log('iii')
+  //   return this.props.testMobx.getAll().then(() => {
+  //     return true
+  //   })
 	}
 
   change(i){

@@ -113,9 +113,11 @@ export default class TestMobx {
 	}
 
 	@action initData(i){
+		let data = null
+		let user = null 
 		let cache = this.toJson().points
-		let data = JSON.parse(window.localStorage.getItem("dataNextsticker"))
-		let user = window.localStorage.getItem("userNextsticker")
+		data = JSON.parse(window.localStorage.getItem("dataNextsticker"))
+		user = window.localStorage.getItem("userNextsticker")
 		if(data){
 			this.points = data.points
 			this.points1 = data.points1
@@ -159,16 +161,20 @@ export default class TestMobx {
 	}
 
 	@action getAll(name){
-		axios.get('/api/admin/all',{
-			params: {
-				name: name
-			}
-		})
-		.then((data) => {
-			this.all = data.data.data
-		})
-		.catch((err) => {
-			console.log(err)
+		return new Promise((resolve, reject) => {
+			axios.get('/api/admin/all',{
+				params: {
+					name: name
+				}
+			})
+			.then((data) => {
+				console.log(data.data.data)
+				this.all = data.data.data
+				resolve(true)
+			})
+			.catch((err) => {
+				reject(err)
+			})
 		})
 	}
 
