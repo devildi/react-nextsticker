@@ -18,15 +18,13 @@ export default class extends React.Component {
 	}
 
 	bootstrap(){
-   return this.props.testMobx.getAll().then((data) => {
-   	console.log(data)
-   	console.log('true')
-   	return true
-   }).catch((err) => {
-   	console.log(err)
-   	console.log('false')
-   	return false
-   })
+  	return this.props.testMobx.getAll('','bootstrap').then(() => {
+   		return true
+  	}).catch((err) => {
+  		console.log('*************************')
+      console.log(err)
+      return false
+    })
 	}
 
 	render() {

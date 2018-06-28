@@ -160,15 +160,15 @@ export default class TestMobx {
 		})
 	}
 
-	@action getAll(name){
+	@action getAll(name, from){
+		let api = from ? 'http://127.0.0.1:3333/api/admin/all' : '/api/admin/all'
 		return new Promise((resolve, reject) => {
-			axios.get('/api/admin/all',{
+			axios.get(api, {
 				params: {
 					name: name
 				}
 			})
 			.then((data) => {
-				console.log(data.data.data)
 				this.all = data.data.data
 				resolve(true)
 			})
@@ -190,11 +190,9 @@ export default class TestMobx {
 	}
 
 	@action openinfoWindow(j){
-
 		if(this.dinnerFlag !== null){
 			this.openDinnerinfoWindow(this.dinnerFlag)
 		}
-
 		let array = this.toJson().points1
 		if(this.flag === null){
 			array[j].isOpen = !array[j].isOpen
