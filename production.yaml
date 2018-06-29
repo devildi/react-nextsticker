@@ -1,0 +1,6 @@
+apps:
+  - script: ./SSR/server.js
+    name: woody 
+    env_production:
+      NODE_ENV: production
+      HOST: localhost

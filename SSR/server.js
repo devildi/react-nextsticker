@@ -38,6 +38,9 @@ if(!isDev){
 	devstatic(app)
 }
 
-app.listen(3333, () =>{
+const host = process.env.host || '0.0.0.0'
+const port = process.env.port || '3333'
+
+app.listen(port, host, () => {
 	console.log('The SSR is Listening 3333')
 })
