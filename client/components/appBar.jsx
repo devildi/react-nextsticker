@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton'
 import ActionHome from 'material-ui/svg-icons/action/home'
 import Menu from './appBarMenu'
 import TextField from 'material-ui/TextField'
+import MenuIcon from 'material-ui/svg-icons/navigation/menu'
 
 import {observer, inject} from 'mobx-react'
 const styles = {
@@ -107,7 +108,7 @@ export default class extends React.Component {
           }
           iconElementRight={
             this.props.testMobx.toJson().points1 && this.props.testMobx.toJson().points1.length > 0
-            ?<FlatButton label="Detail" onClick={this.handleClick.bind(this)}/>
+            ?<IconButton onClick={this.handleClick.bind(this)}><MenuIcon /></IconButton>
             :<FlatButton label="行程编号" onClick={this.login.bind(this)}/>
           }
         />
