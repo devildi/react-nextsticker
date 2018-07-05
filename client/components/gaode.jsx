@@ -96,6 +96,7 @@ class Geolocation extends React.Component {
   					this.props.testMobx.setMyself(myPosition)
           })
     			window.AMap.event.addListener(this.geolocation, 'error', (data) => {
+    				console.log(data)
     				alert('高德地图定位失败，请刷新页面！')
     			}) 
         })

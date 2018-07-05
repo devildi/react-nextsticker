@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Redirect, withRouter,Switch} from 'react-router-dom'
+import { Route, Redirect, withRouter } from 'react-router-dom'
 import {observer, inject} from 'mobx-react'
 import MapG from '../views/map/index'
 import More from '../views/more/index'
